@@ -17,17 +17,18 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    /* National Lottery Brand Colors */
+    --primary: 217 91% 17%; /* Deep navy blue */
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217 91% 25%; /* Lighter blue */
+    --secondary-foreground: 210 40% 98%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 217 91% 20%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -35,6 +36,19 @@ All colors MUST be HSL.
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
+
+    /* Game-specific colors */
+    --lotto: 0 68% 50%; /* Red for Lotto */
+    --lotto-foreground: 0 0% 100%;
+    
+    --euromillions: 45 100% 50%; /* Gold/Yellow for EuroMillions */
+    --euromillions-foreground: 217 91% 17%;
+    
+    --thunderball: 263 83% 57%; /* Purple for Thunderball */
+    --thunderball-foreground: 0 0% 100%;
+    
+    --instant-win: 120 60% 30%; /* Green for Instant Win */
+    --instant-win-foreground: 0 0% 100%;
 
     --radius: 0.5rem;
 

@@ -49,13 +49,13 @@ const MoreGamesSection = () => {
   return (
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">MORE GAMES</h2>
+        <div className="flex items-center justify-between mb-8 animate-fade-in">
+          <h2 className="text-3xl font-bold text-gray-800 transform transition-all duration-500 hover:scale-105">MORE GAMES</h2>
           <div className="flex space-x-2">
-            <Button variant="outline" size="sm" className="p-2">
+            <Button variant="outline" size="sm" className="p-2 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white">
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" className="p-2">
+            <Button variant="outline" size="sm" className="p-2 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white">
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
@@ -63,18 +63,23 @@ const MoreGamesSection = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {games.map((game, index) => (
-            <GameCard
-              key={index}
-              game={game.game}
-              title={game.title}
-              subtitle={game.subtitle}
-              prize={game.prize}
-              date={game.date}
-              backgroundColor={game.backgroundColor}
-              textColor={game.textColor}
-              buttonText={game.buttonText}
-              buttonPrice={game.buttonPrice}
-            />
+            <div 
+              key={index} 
+              className="animate-slide-up"
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
+              <GameCard
+                game={game.game}
+                title={game.title}
+                subtitle={game.subtitle}
+                prize={game.prize}
+                date={game.date}
+                backgroundColor={game.backgroundColor}
+                textColor={game.textColor}
+                buttonText={game.buttonText}
+                buttonPrice={game.buttonPrice}
+              />
+            </div>
           ))}
         </div>
       </div>

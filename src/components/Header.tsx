@@ -1,41 +1,83 @@
-import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
+const navLinks = [
+  { name: "Games", path: "/games" },
+  { name: "Results", path: "/results" },
+  { name: "Winners", path: "#" },
+  { name: "Help", path: "#" },
+];
 
 const Header = () => {
-  return (
-    <header className="bg-primary text-primary-foreground shadow-lg">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center space-x-8">
-            <div className="text-xl font-bold transform transition-all duration-300 hover:scale-105 cursor-pointer">THE NATIONAL LOTTERY</div>
-            
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <div className="flex items-center space-x-1 cursor-pointer hover:text-primary-foreground/80 transition-all duration-300 transform hover:scale-105">
-                <span>GAMES</span>
-                <ChevronDown className="h-4 w-4 transition-transform duration-300 hover:rotate-180" />
-              </div>
-              <div className="flex items-center space-x-1 cursor-pointer hover:text-primary-foreground/80 transition-all duration-300 transform hover:scale-105">
-                <span>RESULTS</span>
-                <ChevronDown className="h-4 w-4 transition-transform duration-300 hover:rotate-180" />
-              </div>
-              <span className="cursor-pointer hover:text-primary-foreground/80 transition-all duration-300 transform hover:scale-105 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary-foreground after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">WINNERS & GOOD CAUSES</span>
-              <span className="cursor-pointer hover:text-primary-foreground/80 transition-all duration-300 transform hover:scale-105 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary-foreground after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left">HEALTHY PLAY</span>
-            </nav>
-          </div>
+  const [menuOpen, setMenuOpen] = useState(false);
 
-          {/* Auth Buttons */}
-          <div className="flex items-center space-x-3">
-            <Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary transition-all duration-300 transform hover:scale-105">
-              Register
-            </Button>
-            <Button variant="secondary" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              SIGN IN
-            </Button>
-          </div>
+  return (
+    <header className="bg-gradient-to-r from-indigo-600 via-blue-500 to-cyan-400 shadow sticky top-0 z-50">
+      <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="flex items-center space-x-2">
+          <img src="/logo.png" alt="Lottery Logo" className="h-8 w-8" />
+          <span className="font-bold text-xl text-white drop-shadow">
+            Replica Lottery
+          </span>
+        </Link>
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex space-x-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              className="text-white hover:text-yellow-300 font-medium transition-colors duration-200"
+            >
+              {link.name}
+            </Link>
+          ))}
+        </nav>
+        {/* Actions */}
+        <div className="space-x-2 hidden md:block">
+          <button className="px-4 py-1 rounded bg-yellow-400 text-indigo-900 font-semibold hover:bg-yellow-300 transition shadow">
+            Login
+          </button>
+          <button className="px-4 py-1 rounded bg-white text-indigo-700 font-semibold hover:bg-gray-100 transition shadow">
+            Register
+          </button>
         </div>
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden flex items-center px-2 py-1 border rounded text-white border-white"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Open menu"
+        >
+          <svg width="24" height="24" fill="currentColor">
+            <rect y="6" width="24" height="2" rx="1" />
+            <rect y="12" width="24" height="2" rx="1" />
+            <rect y="18" width="24" height="2" rx="1" />
+          </svg>
+        </button>
       </div>
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <nav className="md:hidden bg-gradient-to-r from-indigo-600 via-blue-500 to-cyan-400 border-t">
+          <div className="px-4 py-2 flex flex-col space-y-2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className="text-white hover:text-yellow-300 font-medium transition-colors duration-200"
+                onClick={() => setMenuOpen(false)}
+              >
+                {link.name}
+              </Link>
+            ))}
+            <button className="px-4 py-1 rounded bg-yellow-400 text-indigo-900 font-semibold hover:bg-yellow-300 transition shadow">
+              Login
+            </button>
+            <button className="px-4 py-1 rounded bg-white text-indigo-700 font-semibold hover:bg-gray-100 transition shadow">
+              Register
+            </button>
+          </div>
+        </nav>
+      )}
     </header>
   );
 };

@@ -1,54 +1,87 @@
-import { Button } from "@/components/ui/button";
-import { Minus, Plus } from "lucide-react";
+import React, { useState } from "react";
+
+const games = [
+  {
+    name: "Lotto",
+    logo: "/lotto-logo.png",
+    jackpot: "£5.2 Million",
+    nextDraw: "Wed 30 Jul, 7:30pm",
+    color: "from-yellow-400 via-yellow-300 to-yellow-500",
+    ballsImg: "/lotto-balls.png",
+  },
+  {
+    name: "EuroMillions",
+    logo: "/euromillions-logo.png",
+    jackpot: "£14 Million",
+    nextDraw: "Tue 29 Jul, 8:30pm",
+    color: "from-pink-500 via-pink-400 to-pink-600",
+    ballsImg: "/euromillions-balls.png",
+  },
+  {
+    name: "Set For Life",
+    logo: "/setforlife-logo.png",
+    jackpot: "£10,000/month for 30 years",
+    nextDraw: "Mon 4 Aug, 8:00pm",
+    color: "from-green-400 via-green-300 to-green-500",
+    ballsImg: "/setforlife-balls.png",
+  },
+];
 
 const HeroSection = () => {
+  const [selected, setSelected] = useState(0);
+
   return (
-    <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 min-h-[400px] flex items-center overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row items-center justify-between">
-          {/* Left side - EuroMillions branding */}
-          <div className="text-left mb-8 lg:mb-0 animate-fade-in">
-            <p className="text-primary font-semibold mb-2 transform transition-all duration-500 hover:scale-105">This Friday</p>
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="text-4xl font-bold text-primary transform transition-all duration-700 hover:scale-110">EUROMILLIONS</div>
-            </div>
-            <div className="text-6xl lg:text-7xl font-black text-primary mb-2 transform transition-all duration-700 hover:scale-105 animate-pulse-glow">£145M</div>
-            <div className="text-xl text-primary mb-4 transform transition-all duration-500 hover:scale-105">Million*</div>
-            <div className="text-2xl font-bold text-primary mb-6 transform transition-all duration-500 hover:scale-105">Jackpot</div>
-            <div className="text-lg text-primary font-semibold transform transition-all duration-500 hover:scale-105">GET THAT EUROMILLIONS FEELING</div>
+    <section
+      className={`bg-gradient-to-r ${games[selected].color} text-white py-12 shadow-lg transition-all duration-500`}
+    >
+      <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+        <div className="mb-8 md:mb-0 flex-1">
+          <div className="flex items-center mb-4 space-x-3">
+            <img
+              src={games[selected].logo}
+              alt={`${games[selected].name} Logo`}
+              className="h-12 w-12 rounded-full shadow-lg bg-white p-1"
+            />
+            <h1 className="text-3xl md:text-4xl font-extrabold drop-shadow">
+              {games[selected].name}
+            </h1>
           </div>
-
-          {/* Right side - Quick play interface */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-lg p-6 shadow-2xl max-w-md w-full transform transition-all duration-500 hover:scale-105 hover:shadow-3xl animate-slide-up">
-            <div className="text-center mb-4">
-              <h3 className="text-lg font-bold text-gray-800 mb-2 transition-colors duration-300 hover:text-primary">Fancy a Lucky Dip?</h3>
-              <p className="text-sm text-gray-600 transition-colors duration-300 hover:text-gray-800">Play a quick Lucky Dip in this Friday's EuroMillions draw</p>
-            </div>
-
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-semibold text-gray-700">How many lines?</span>
-              <div className="flex items-center space-x-3">
-                <Button size="sm" variant="outline" className="h-8 w-8 p-0 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white">
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="text-2xl font-bold text-gray-800 w-8 text-center transition-all duration-300 hover:scale-110 hover:text-primary">1</span>
-                <Button size="sm" variant="outline" className="h-8 w-8 p-0 transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="text-center mb-4">
-              <span className="text-lg font-bold text-gray-800 transition-all duration-300 hover:text-primary hover:scale-105 inline-block">Total: £2.50</span>
-            </div>
-
-            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95">
-              QUICK LUCKY DIP
-            </Button>
+          <p className="text-2xl md:text-3xl font-bold mb-2 drop-shadow-lg">
+            {games[selected].jackpot}
+          </p>
+          <p className="text-lg mb-6 font-medium">
+            {games[selected].nextDraw}
+          </p>
+          <a
+            href="#"
+            className="inline-block bg-white text-indigo-700 font-bold px-8 py-3 rounded-full shadow-lg hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white"
+          >
+            Play Now
+          </a>
+          <div className="mt-6 flex space-x-2">
+            {games.map((game, idx) => (
+              <button
+                key={game.name}
+                aria-label={`Show ${game.name} details`}
+                className={`w-8 h-8 rounded-full border-2 ${
+                  selected === idx
+                    ? "border-white bg-white"
+                    : "border-white bg-transparent"
+                } flex items-center justify-center transition-all duration-200`}
+                onClick={() => setSelected(idx)}
+              >
+                <img src={game.logo} alt={game.name} className="h-6 w-6" />
+              </button>
+            ))}
           </div>
         </div>
+        <img
+          src={games[selected].ballsImg}
+          alt={`${games[selected].name} Balls`}
+          className="w-44 h-44 md:w-56 md:h-56 drop-shadow-xl flex-1"
+        />
       </div>
-    </div>
+    </section>
   );
 };
 

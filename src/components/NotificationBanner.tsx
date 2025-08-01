@@ -1,16 +1,11 @@
-import { Info } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import React from "react";
 
-const NotificationBanner = () => {
-  return (
-    <Alert className="bg-blue-100 border-blue-200 rounded-none border-l-0 border-r-0">
-      <Info className="h-4 w-4 text-blue-600" />
-      <AlertDescription className="text-blue-800">
-        <strong>PLANNED UPGRADES</strong> - We're spending this weekend upgrading the technology that powers The National Lottery. Following Saturday's draws, some services won't be available until Monday.{" "}
-        <a href="#" className="underline hover:no-underline">Find out more</a>
-      </AlertDescription>
-    </Alert>
-  );
-};
+const NotificationBanner = () => (
+  <div className="bg-yellow-300 text-indigo-900 text-center py-2 px-4 font-semibold shadow transition-all duration-300">
+    <span>
+      🎉 New! Play <span className="underline font-bold">Set For Life</span> every Monday and Thursday. Don’t miss out!
+    </span>
+  </div>
+);
 
 export default NotificationBanner;

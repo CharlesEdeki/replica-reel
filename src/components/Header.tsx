@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 
 const navLinks = [
   { name: "Games", path: "/games" },
+  { name: "Buy Tickets", path: "/buy-tickets" },
   { name: "Results", path: "/results" },
+  { name: "Check Numbers", path: "/check-numbers" },
   { name: "Winners", path: "#" },
   { name: "Help", path: "#" },
 ];
@@ -16,7 +18,7 @@ const Header = () => {
       <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
-          <img src="/logo.png" alt="Lottery Logo" className="h-8 w-8" />
+          <img src="/lotto-logo.png" alt="Lottery Logo" className="h-8 w-8" />
           <span className="font-bold text-xl text-white drop-shadow">
             Replica Lottery
           </span>

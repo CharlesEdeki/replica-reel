@@ -1,4 +1,5 @@
 import React from "react";
+import EnhancedGamesShowcase from "@/components/EnhancedGamesShowcase"
 
 const GamePage = () => (
   <div className="max-w-4xl mx-auto py-10 px-4">

@@ -10,6 +10,8 @@ import ResultsPage from "./pages/ResultsPage";
 import GamesPage from "./pages/GamePage";
 import CheckNumbersPage from "./pages/CheckNumbersPage";
 import BuyTicketsPage from "./pages/BuyTicketsPage";
+import SignInPage from "./pages/SignInPage";
+import RegistrationPage from "./pages/RegistrationPage";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/register" element={<RegistrationPage />} />
           <Route path="/results" element={<ResultsPage />} />
           <Route path="/games" element={<GamesPage />} />
           <Route path="/check-numbers" element={<CheckNumbersPage />} />

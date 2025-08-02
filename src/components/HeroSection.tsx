@@ -85,26 +85,13 @@ const HeroSection = () => {
 
   return (
     <>
-      {/* System Maintenance Banner */}
+      
       <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
         <div className="max-w-6xl mx-auto flex items-start">
           <div className="flex-shrink-0">
-            <div className="w-6 h-6 bg-blue-400 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-bold">i</span>
-            </div>
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800">
-              System Maintenance
-            </h3>
-            <div className="mt-1 text-sm text-blue-700">
-              <p>
-                We're spending this weekend upgrading the technology that powers The National Lottery. Following Saturday's draws, some services won't be available until Monday.
-              </p>
-              <a href="#" className="underline hover:text-blue-900 transition-colors">
-                Find out more
-              </a>
-            </div>
+            
           </div>
         </div>
       </div>

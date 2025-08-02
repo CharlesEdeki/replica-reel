@@ -150,7 +150,9 @@ function ResultsMegaMenu({ isOpen, onClose }) {
                   <div className={`w-full h-3 ${game.color} rounded mb-4`}></div>
                   <h3 className="font-bold text-lg mb-4">{game.name}</h3>
                   <button className={`w-full border-2 ${game.buttonColor} py-2 px-4 rounded font-semibold hover:bg-gray-50 transition`}>
+                    <a href="/check-numbers" className="text-center">
                     CHECK MY NUMBERS
+                    </a>
                   </button>
                 </div>
               ))}
@@ -228,7 +230,7 @@ export default function Header() {
           </div>
           
           <nav className="hidden md:flex space-x-8 text-white font-medium">
-            <a href="#" className="hover:text-yellow-300 transition-colors duration-200">Home</a>
+            <a href="/" className="hover:text-yellow-300 transition-colors duration-200">Home</a>
             <button 
               onClick={handleGamesClick}
               className="hover:text-yellow-300 transition-colors duration-200 flex items-center"

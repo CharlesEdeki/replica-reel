@@ -68,7 +68,7 @@ const GamePlayPage: React.FC = () => {
     mainNumbers.sort((a, b) => a - b);
 
     // Generate bonus numbers if applicable
-    let bonusNumbers: number[] = [];
+    const bonusNumbers: number[] = [];
     if (game.bonusNumbers) {
       const bonusRange = game.bonusNumbers.range.split('-').map(n => parseInt(n));
       while (bonusNumbers.length < game.bonusNumbers.count) {

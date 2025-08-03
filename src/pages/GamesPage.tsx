@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, Clock, Pound, Play, ArrowRight, Star, Target, LogIn } from 'lucide-react';
+import { Calendar, Clock, PoundSterling, Play, ArrowRight, Star, Target, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -108,7 +108,7 @@ const GamesPage = () => {
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <Pound className="w-4 h-4" />
+                        <PoundSterling className="w-4 h-4" />
                         <span className="text-sm font-medium">Min Jackpot</span>
                       </div>
                       <div className="text-white/90 font-bold">{game.minJackpot}</div>

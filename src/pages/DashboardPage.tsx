@@ -43,15 +43,9 @@ const DashboardPage: React.FC = () => {
   const [tickets, setTickets] = useState<LotteryTicket[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/sign-in');
-      return;
-    }
+  
 
-    loadUserTickets();
-  }, [isAuthenticated, navigate]);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadUserTickets = () => {
     try {
       const savedTickets = localStorage.getItem('lotteryTickets');
@@ -67,6 +61,15 @@ const DashboardPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/sign-in');
+      return;
+    }
+
+    loadUserTickets();
+  }, [isAuthenticated, loadUserTickets, navigate]);
 
   const simulateDrawResults = (ticketId: string) => {
     const ticket = tickets.find(t => t.id === ticketId);

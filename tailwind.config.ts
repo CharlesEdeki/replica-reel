@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
+import tailwindcssTextshadow from "tailwindcss-textshadow";
 
 export default {
 	darkMode: ["class"],
@@ -211,9 +213,16 @@ export default {
 				'particle-float': 'particle-float 2s ease-out forwards',
 				'3d-rotate': '3d-rotate 0.5s ease-in-out',
 				'glow-pulse': 'glow-pulse 1.5s ease-in-out infinite'
+			},
+			textShadow: {
+				'lg': '0 4px 8px rgba(0, 0, 0, 0.3)',
+				'2xl': '0 8px 16px rgba(0, 0, 0, 0.5)'
+			},
+			perspective: { // Re-added perspective
+				'1000': '1000px',
+				'2000': '2000px'
 			}
 		}
 	},
-	// eslint-disable-next-line @typescript-eslint/no-require-imports
-	plugins: [require("tailwindcss-animate")],
+	plugins: [tailwindcssAnimate, tailwindcssTextshadow],
 } satisfies Config;

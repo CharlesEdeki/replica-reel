@@ -123,18 +123,18 @@ const PromoBannersSection = () => {
           ))}
         </div>
 
-        {/* Mobile Layout - Carousel */}
+        {/* Mobile Layout - Enhanced Carousel */}
         <div className="md:hidden">
           <div className="relative">
             {/* Carousel Controls */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Special Offers</h2>
+              <h2 className="text-xl font-bold text-gray-800">Special Offers</h2>
               <div className="flex space-x-2">
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={prevSlide}
-                  className="p-2"
+                  className="p-2 rounded-full border-2 border-gray-300 hover:border-blue-500 transition-all duration-200"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -142,7 +142,7 @@ const PromoBannersSection = () => {
                   variant="outline" 
                   size="sm" 
                   onClick={nextSlide}
-                  className="p-2"
+                  className="p-2 rounded-full border-2 border-gray-300 hover:border-blue-500 transition-all duration-200"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -150,7 +150,7 @@ const PromoBannersSection = () => {
             </div>
 
             {/* Carousel Content */}
-            <div className="overflow-hidden">
+            <div className="overflow-hidden rounded-lg">
               <div 
                 className="flex transition-transform duration-300 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -158,9 +158,9 @@ const PromoBannersSection = () => {
                 {promoOffers.map((offer) => (
                   <div key={offer.id} className="w-full flex-shrink-0">
                     <Card 
-                      className={`${offer.bgImage} ${offer.textColor} border-0 overflow-hidden`}
+                      className={`${offer.bgImage} ${offer.textColor} border-0 overflow-hidden min-h-[350px]`}
                     >
-                      <CardContent className="p-6 min-h-[300px] flex flex-col">
+                      <CardContent className="p-6 min-h-[350px] flex flex-col">
                         {/* Header */}
                         <div className="flex items-center mb-4">
                           {offer.icon}
@@ -171,15 +171,15 @@ const PromoBannersSection = () => {
 
                         {/* Main Content */}
                         <div className="flex-1">
-                          <h3 className="text-2xl font-black mb-3 leading-tight">
+                          <h3 className="text-xl font-black mb-3 leading-tight">
                             {offer.title}
                           </h3>
                           
-                          <p className="text-lg mb-2 opacity-95">
+                          <p className="text-base mb-2 opacity-95">
                             {offer.subtitle}
                           </p>
                           
-                          <div className="text-4xl font-black mb-3 text-yellow-300 drop-shadow-lg">
+                          <div className="text-3xl font-black mb-3 text-yellow-300 drop-shadow-lg">
                             {offer.prize}
                           </div>
                           
@@ -212,7 +212,7 @@ const PromoBannersSection = () => {
               </div>
             </div>
 
-            {/* Dots Indicator */}
+            {/* Enhanced Dots Indicator */}
             <div className="flex justify-center mt-4 space-x-2">
               {promoOffers.map((_, index) => (
                 <button
@@ -225,6 +225,11 @@ const PromoBannersSection = () => {
                   }`}
                 />
               ))}
+            </div>
+
+            {/* Slide Counter */}
+            <div className="text-center mt-2 text-sm text-gray-500">
+              {currentSlide + 1} of {promoOffers.length}
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Clock } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CountdownTimerProps {
   targetDate: Date;
@@ -205,6 +206,12 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
 
 // Demo component showing multiple enhanced game cards
 const EnhancedGamesShowcase = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
   const games = [
     {
       game: "LOTTO",
@@ -241,6 +248,58 @@ const EnhancedGamesShowcase = () => {
     }
   ];
 
+  const checkScrollButtons = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      const cardWidth = 320; // Approximate card width + gap
+      scrollRef.current.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+      setTimeout(checkScrollButtons, 300);
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      const cardWidth = 320; // Approximate card width + gap
+      scrollRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
+      setTimeout(checkScrollButtons, 300);
+    }
+  };
+
+  // Auto-play functionality for mobile
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) { // Mobile only
+      const interval = setInterval(() => {
+        if (isAutoPlaying) {
+          setCurrentSlide((prev) => (prev + 1) % games.length);
+        }
+      }, 5000); // 5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [isAutoPlaying, games.length]);
+
+  // Pause auto-play on user interaction
+  const handleSlideChange = (newSlide: number) => {
+    setCurrentSlide(newSlide);
+    setIsAutoPlaying(false);
+    // Resume auto-play after 10 seconds of inactivity
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  React.useEffect(() => {
+    checkScrollButtons();
+    const handleResize = () => checkScrollButtons();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
@@ -248,7 +307,8 @@ const EnhancedGamesShowcase = () => {
           Live Draw Countdown
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Desktop Layout - Grid */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {games.map((game, index) => (
             <div 
               key={index}
@@ -269,6 +329,81 @@ const EnhancedGamesShowcase = () => {
               />
             </div>
           ))}
+        </div>
+
+        {/* Mobile Layout - Auto-sliding Carousel */}
+        <div className="md:hidden">
+          {/* Mobile Navigation */}
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-gray-800">Live Draws</h3>
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSlideChange((currentSlide - 1 + games.length) % games.length)}
+                className="p-2 rounded-full border-2 border-gray-300 hover:border-blue-500 transition-all duration-200"
+              >
+                <ChevronLeft className="h-4 w-4 text-blue-900" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSlideChange((currentSlide + 1) % games.length)}
+                className="p-2 rounded-full border-2 border-gray-300 hover:border-blue-500 transition-all duration-200"
+              >
+                <ChevronRight className="h-4 w-4 text-blue-900" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Auto-sliding Carousel */}
+          <div className="overflow-hidden rounded-lg">
+            <div 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {games.map((game, index) => (
+                <div
+                  key={index}
+                  className="w-full flex-shrink-0"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <EnhancedGameCard
+                    game={game.game}
+                    title={game.title}
+                    subtitle={game.subtitle}
+                    prize={game.prize}
+                    drawDate={game.drawDate}
+                    backgroundColor={game.backgroundColor}
+                    textColor={game.textColor}
+                    buttonText={game.buttonText}
+                    buttonPrice={game.buttonPrice}
+                    jackpotEstimate={game.jackpotEstimate}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile slide indicator */}
+          <div className="flex justify-center mt-4 space-x-2">
+            {games.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleSlideChange(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentSlide 
+                    ? 'bg-blue-600 scale-110' 
+                    : 'bg-gray-300 hover:bg-gray-400'
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Auto-play indicator */}
+          <div className="text-center mt-2 text-xs text-gray-500">
+            Auto-sliding every 5 seconds • {currentSlide + 1} of {games.length}
+          </div>
         </div>
       </div>
     </div>

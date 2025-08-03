@@ -128,64 +128,64 @@ const NumberChecker = () => {
         particleCount={100}
       />
       
-      <div className="py-12 bg-gray-50">
+      <div className="py-8 md:py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">Check Your Numbers</h1>
-            <p className="text-lg text-gray-600">Enter your numbers to see if you've won</p>
+          <div className="text-center mb-6 md:mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Check Your Numbers</h1>
+            <p className="text-base md:text-lg text-gray-600">Enter your numbers to see if you've won</p>
           </div>
 
           <Card className="shadow-2xl">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center">Select Game & Numbers</CardTitle>
+              <CardTitle className="text-xl md:text-2xl font-bold text-center">Select Game & Numbers</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <CardContent className="p-4 md:p-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
                 {Object.entries(games).map(([key, game]) => (
                   <div
                     key={key}
                     onClick={() => setSelectedGame(key)}
-                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                    className={`p-3 md:p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
                       selectedGame === key
                         ? `${game.color} text-white border-current`
                         : 'bg-white border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <h3 className="font-bold text-lg mb-2">{game.name}</h3>
-                    <p className="text-sm opacity-90">Select {game.maxNumbers} numbers</p>
+                    <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">{game.name}</h3>
+                    <p className="text-xs md:text-sm opacity-90">Select {game.maxNumbers} numbers</p>
                     <p className="text-xs opacity-75">Draws: {game.drawDays.join(', ')}</p>
                   </div>
                 ))}
               </div>
 
               <div className="mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <Label className="text-lg font-semibold">Enter Your Numbers</Label>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-3">
+                  <Label className="text-base md:text-lg font-semibold">Enter Your Numbers</Label>
                   <div className="flex space-x-2">
                     <Button
                       onClick={generateNumbers}
                       variant="outline"
-                      className="text-sm"
+                      className="text-xs md:text-sm"
                     >
                       Generate Random
                     </Button>
                     <Button
                       onClick={clearSelection}
                       variant="outline"
-                      className="text-sm"
+                      className="text-xs md:text-sm"
                     >
                       Clear
                     </Button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-7 md:grid-cols-10 gap-2 mb-4">
+                <div className="grid grid-cols-7 md:grid-cols-10 gap-1 md:gap-2 mb-4">
                   {Array.from({ length: currentGame.numberRange }, (_, i) => i + 1).map((number) => (
                     <button
                       key={number}
                       onClick={() => handleNumberSelect(number)}
                       disabled={!userNumbers.includes(number) && userNumbers.length >= currentGame.maxNumbers}
-                      className={`aspect-square rounded-full text-sm font-bold transition-all duration-300 transform ${
+                      className={`aspect-square rounded-full text-xs md:text-sm font-bold transition-all duration-300 transform ${
                         userNumbers.includes(number)
                           ? `${currentGame.color} text-white scale-110 shadow-lg animate-pulse-glow`
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -198,11 +198,11 @@ const NumberChecker = () => {
                   ))}
                 </div>
 
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-1 md:gap-2 mb-4">
                   {userNumbers.map((number) => (
                     <Badge
                       key={number}
-                      className={`${currentGame.color} text-white animate-fade-in`}
+                      className={`${currentGame.color} text-white animate-fade-in text-xs md:text-sm`}
                     >
                       {number}
                     </Badge>
@@ -210,12 +210,12 @@ const NumberChecker = () => {
                 </div>
 
                 <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-2">
+                  <p className="text-sm md:text-base text-gray-600 mb-2">
                     Selected {userNumbers.length} of {currentGame.maxNumbers} numbers
                   </p>
                   {userNumbers.length === currentGame.maxNumbers && (
                     <div className="bg-green-100 border border-green-300 rounded-lg p-3 mb-4 animate-slide-up">
-                      <p className="text-green-800 font-semibold">✓ Numbers ready to check!</p>
+                      <p className="text-green-800 font-semibold text-sm md:text-base">✓ Numbers ready to check!</p>
                     </div>
                   )}
                 </div>
@@ -225,34 +225,34 @@ const NumberChecker = () => {
                 <Button
                   disabled={userNumbers.length !== currentGame.maxNumbers}
                   onClick={checkNumbers}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 text-lg animate-fade-in"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 md:py-4 px-6 md:px-8 text-base md:text-lg animate-fade-in"
                 >
                   Check My Numbers
                 </Button>
               </div>
 
               {checkResult && (
-                <div className="mt-8 p-6 border rounded-lg animate-fade-in">
+                <div className="mt-6 md:mt-8 p-4 md:p-6 border rounded-lg animate-fade-in">
                   <div className="text-center">
-                    <h3 className="text-2xl font-bold mb-4">
+                    <h3 className="text-xl md:text-2xl font-bold mb-4">
                       {checkResult.winning ? "🎉 Congratulations! 🎉" : "Better luck next time!"}
                     </h3>
                     
-                    <div className={`text-4xl font-bold mb-4 ${
+                    <div className={`text-3xl md:text-4xl font-bold mb-4 ${
                       checkResult.winning ? 'text-green-600' : 'text-gray-600'
                     }`}>
                       {checkResult.prize}
                     </div>
                     
                     {checkResult.tier && (
-                      <p className="text-lg text-gray-600 mb-4">
+                      <p className="text-base md:text-lg text-gray-600 mb-4">
                         {checkResult.tier}
                       </p>
                     )}
                     
-                    <div className="bg-gray-100 rounded-lg p-4 mb-4">
-                      <p className="text-sm text-gray-600 mb-2">Your numbers:</p>
-                      <div className="flex flex-wrap gap-2 justify-center">
+                    <div className="bg-gray-100 rounded-lg p-3 md:p-4 mb-4">
+                      <p className="text-xs md:text-sm text-gray-600 mb-2">Your numbers:</p>
+                      <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
                         {userNumbers.map((number) => (
                           <Badge
                             key={number}
@@ -260,7 +260,7 @@ const NumberChecker = () => {
                               checkResult.matchedNumbers.includes(number)
                                 ? 'bg-green-500 text-white'
                                 : 'bg-gray-300 text-gray-700'
-                            }`}
+                            } text-xs md:text-sm`}
                           >
                             {number}
                           </Badge>
@@ -268,7 +268,7 @@ const NumberChecker = () => {
                       </div>
                     </div>
                     
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs md:text-sm text-gray-500">
                       This is a simulation. Real results may vary.
                     </p>
                   </div>

@@ -1,6 +1,7 @@
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, User, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Games Mega Menu Component
 function GamesMegaMenu({ isOpen, onClose }) {
@@ -237,6 +238,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [gamesOpen, setGamesOpen] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   const closeAllMenus = () => {
     setGamesOpen(false);
@@ -251,6 +253,12 @@ export default function Header() {
   const handleResultsClick = () => {
     setResultsOpen(!resultsOpen);
     setGamesOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setMobileOpen(false);
+    closeAllMenus();
   };
 
   return (
@@ -275,25 +283,48 @@ export default function Header() {
             >
               Results {resultsOpen ? <ChevronDown className="ml-1 rotate-180 transition-transform" size={16} /> : <ChevronDown className="ml-1 transition-transform" size={16} />}
             </button>
+            {isAuthenticated && (
+              <Link to="/dashboard" className="hover:text-yellow-300 transition-colors duration-200">My Tickets</Link>
+            )}
             <Link to="/games" className="hover:text-yellow-300 transition-colors duration-200">Winners & Good Causes</Link>
-            <Link to="/games" className="hover:text-yellow-300 transition-colors duration-200">Healthy Play</Link>
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Link 
-              to="/register" 
-              className="text-white underline hover:text-yellow-300 transition-colors duration-200"
-              onClick={() => setMobileOpen(false)}>
-              Register
-            </Link>
-            <Link 
-              to="/sign-in"
-              className="text-white underline hover:text-yellow-300 transition-colors duration-200"
-              onClick={() => setMobileOpen(false)}>
-              <button className="bg-white text-blue-900 px-6 py-2 rounded font-semibold hover:bg-yellow-300 hover:text-blue-900 transition-colors duration-200">
-                SIGN IN
-              </button>
-            </Link>
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <Link 
+                  to="/dashboard"
+                  className="flex items-center space-x-2 text-white hover:text-yellow-300 transition-colors duration-200"
+                >
+                  <User size={20} />
+                  <span className="hidden lg:inline">{user?.firstName || user?.email}</span>
+                </Link>
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center space-x-1 bg-white bg-opacity-20 text-white px-4 py-2 rounded hover:bg-opacity-30 transition-colors duration-200"
+                >
+                  <LogOut size={16} />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link 
+                  to="/register" 
+                  className="text-white underline hover:text-yellow-300 transition-colors duration-200"
+                  onClick={() => setMobileOpen(false)}>
+                  Register
+                </Link>
+                <Link 
+                  to="/sign-in"
+                  className="text-white underline hover:text-yellow-300 transition-colors duration-200"
+                  onClick={() => setMobileOpen(false)}>
+                  <button className="bg-white text-blue-900 px-6 py-2 rounded font-semibold hover:bg-yellow-300 hover:text-blue-900 transition-colors duration-200">
+                    SIGN IN
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
 
           <button
@@ -309,10 +340,22 @@ export default function Header() {
             <Link to="/" className="block text-white" onClick={() => setMobileOpen(false)}>Home</Link>
             <button onClick={handleGamesClick} className="block text-white text-left w-full">Games</button>
             <button onClick={handleResultsClick} className="block text-white text-left w-full">Results</button>
+            {isAuthenticated && (
+              <Link to="/dashboard" className="block text-white" onClick={() => setMobileOpen(false)}>My Tickets</Link>
+            )}
             <Link to="/games" className="block text-white" onClick={() => setMobileOpen(false)}>Good Causes</Link>
             <div className="pt-4 border-t border-blue-700">
-              <Link to="/register" className="block text-white mb-3" onClick={() => setMobileOpen(false)}>Register</Link>
-              <Link to="/sign-in" className="block text-white" onClick={() => setMobileOpen(false)}>Sign In</Link>
+              {isAuthenticated ? (
+                <>
+                  <div className="text-white mb-3">Signed in as: {user?.firstName || user?.email}</div>
+                  <button onClick={handleLogout} className="block text-white">Sign Out</button>
+                </>
+              ) : (
+                <>
+                  <Link to="/register" className="block text-white mb-3" onClick={() => setMobileOpen(false)}>Register</Link>
+                  <Link to="/sign-in" className="block text-white" onClick={() => setMobileOpen(false)}>Sign In</Link>
+                </>
+              )}
             </div>
           </div>
         )}

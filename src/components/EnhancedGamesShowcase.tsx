@@ -80,7 +80,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, gameName, c
   );
 };
 
-// Enhanced GameCard with countdown timer
+// Enhanced GameCard with improved animations
 interface EnhancedGameCardProps {
   game: string;
   title: string;
@@ -106,29 +106,84 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
   buttonPrice,
   jackpotEstimate
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, vx: number, vy: number}>>([]);
+
+  // Generate particles on hover
+  useEffect(() => {
+    if (isHovered) {
+      const newParticles = Array.from({ length: 6 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5
+      }));
+      setParticles(newParticles);
+    } else {
+      setParticles([]);
+    }
+  }, [isHovered]);
+
+  // Animate particles
+  useEffect(() => {
+    if (particles.length === 0) return;
+
+    const interval = setInterval(() => {
+      setParticles(prev => prev.map(particle => ({
+        ...particle,
+        x: particle.x + particle.vx,
+        y: particle.y + particle.vy,
+        vx: particle.vx * 0.98,
+        vy: particle.vy * 0.98
+      })).filter(p => p.x > 0 && p.x < 100 && p.y > 0 && p.y < 100));
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [particles]);
+
   return (
-    <div className={`${backgroundColor} ${textColor} rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer group`}>
-      <div className="p-6 h-full flex flex-col relative">
-        {/* Hover glow effect */}
-        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-300 rounded-lg"></div>
-        
-        <div className="mb-4 relative z-10">
+    <div 
+      className={`${backgroundColor} ${textColor} rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer group relative h-full min-h-[400px]`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Particle effects */}
+      {particles.map(particle => (
+        <div
+          key={particle.id}
+          className="absolute w-1 h-1 bg-white/40 rounded-full pointer-events-none animate-pulse"
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            transform: `translate(-50%, -50%)`
+          }}
+        />
+      ))}
+
+      {/* Hover overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      <div className="p-6 h-full flex flex-col relative z-10">
+        {/* Game title and jackpot */}
+        <div className="mb-4">
           <h3 className="text-2xl font-bold mb-2 transform transition-transform duration-300 group-hover:scale-105">{game}</h3>
           {jackpotEstimate && (
-            <div className="bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded-full inline-block mb-2">
+            <div className="bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded-full inline-block mb-2 animate-pulse">
               ESTIMATED JACKPOT: {jackpotEstimate}
             </div>
           )}
         </div>
         
-        <div className="flex-1 relative z-10 mb-4">
+        {/* Game content */}
+        <div className="flex-1 mb-4">
           <h4 className="text-xl font-bold mb-2 transition-all duration-300">{title}</h4>
           {subtitle && <p className="text-sm opacity-90 mb-4 transition-opacity duration-300 group-hover:opacity-100">{subtitle}</p>}
           {prize && <div className="text-4xl font-black mb-4 transform transition-all duration-300 group-hover:scale-110 group-hover:text-white">{prize}</div>}
         </div>
 
         {/* Countdown Timer */}
-        <div className="mb-4 relative z-10">
+        <div className="mb-4">
           <CountdownTimer 
             targetDate={drawDate} 
             gameName={game}
@@ -136,10 +191,14 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
           />
         </div>
         
-        <button className="w-full bg-white/20 hover:bg-white/40 text-white border border-white/30 hover:border-white/50 font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg relative z-10">
+        {/* Play button */}
+        <button className="w-full bg-white/20 hover:bg-white/40 text-white border border-white/30 hover:border-white/50 font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
           {buttonText} {buttonPrice && <span className="ml-1">{buttonPrice}</span>}
         </button>
       </div>
+
+      {/* Shadow effect */}
+      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
     </div>
   );
 };
@@ -184,24 +243,31 @@ const EnhancedGamesShowcase = () => {
 
   return (
     <div className="py-12 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Live Draw Countdown</h2>
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+          Live Draw Countdown
+        </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {games.map((game, index) => (
-            <EnhancedGameCard
+            <div 
               key={index}
-              game={game.game}
-              title={game.title}
-              subtitle={game.subtitle}
-              prize={game.prize}
-              drawDate={game.drawDate}
-              backgroundColor={game.backgroundColor}
-              textColor={game.textColor}
-              buttonText={game.buttonText}
-              buttonPrice={game.buttonPrice}
-              jackpotEstimate={game.jackpotEstimate}
-            />
+              className="animate-fade-in"
+              style={{ animationDelay: `${index * 200}ms` }}
+            >
+              <EnhancedGameCard
+                game={game.game}
+                title={game.title}
+                subtitle={game.subtitle}
+                prize={game.prize}
+                drawDate={game.drawDate}
+                backgroundColor={game.backgroundColor}
+                textColor={game.textColor}
+                buttonText={game.buttonText}
+                buttonPrice={game.buttonPrice}
+                jackpotEstimate={game.jackpotEstimate}
+              />
+            </div>
           ))}
         </div>
       </div>

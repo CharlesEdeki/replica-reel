@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import NumberChecker from "@/components/NumberChecker";
+import Footer from "@/components/Footer";
 
 const CheckNumbersPage = () => {
   return (

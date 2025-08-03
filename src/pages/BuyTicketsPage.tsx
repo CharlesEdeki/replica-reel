@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import TicketPurchase from "@/components/TicketPurchase";
+import Footer from "@/components/Footer";
 
 const BuyTicketsPage = () => {
   return (

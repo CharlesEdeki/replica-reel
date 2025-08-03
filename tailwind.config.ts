@@ -112,6 +112,88 @@ export default {
 					'50%': {
 						boxShadow: '0 0 30px rgba(255, 255, 255, 0.6)'
 					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0px)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
+					}
+				},
+				'spin-slow': {
+					'0%': {
+						transform: 'rotate(0deg)'
+					},
+					'100%': {
+						transform: 'rotate(360deg)'
+					}
+				},
+				'wiggle': {
+					'0%, 100%': {
+						transform: 'rotate(-3deg)'
+					},
+					'50%': {
+						transform: 'rotate(3deg)'
+					}
+				},
+				'zoom-in': {
+					'0%': {
+						transform: 'scale(0.5)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
+				'shake': {
+					'0%, 100%': {
+						transform: 'translateX(0)'
+					},
+					'10%, 30%, 50%, 70%, 90%': {
+						transform: 'translateX(-5px)'
+					},
+					'20%, 40%, 60%, 80%': {
+						transform: 'translateX(5px)'
+					}
+				},
+				'rainbow': {
+					'0%': {
+						filter: 'hue-rotate(0deg)'
+					},
+					'100%': {
+						filter: 'hue-rotate(360deg)'
+					}
+				},
+				'particle-float': {
+					'0%': {
+						transform: 'translateY(0px) translateX(0px)',
+						opacity: '1'
+					},
+					'100%': {
+						transform: 'translateY(-100px) translateX(100px)',
+						opacity: '0'
+					}
+				},
+				'3d-rotate': {
+					'0%': {
+						transform: 'rotateY(0deg) rotateX(0deg)'
+					},
+					'50%': {
+						transform: 'rotateY(5deg) rotateX(2deg)'
+					},
+					'100%': {
+						transform: 'rotateY(0deg) rotateX(0deg)'
+					}
+				},
+				'glow-pulse': {
+					'0%, 100%': {
+						boxShadow: '0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor'
+					},
+					'50%': {
+						boxShadow: '0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor'
+					}
 				}
 			},
 			animation: {
@@ -119,7 +201,16 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.6s ease-out',
 				'slide-up': 'slide-up 0.5s ease-out',
-				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+				'float': 'float 3s ease-in-out infinite',
+				'spin-slow': 'spin-slow 3s linear infinite',
+				'wiggle': 'wiggle 1s ease-in-out infinite',
+				'zoom-in': 'zoom-in 0.3s ease-out',
+				'shake': 'shake 0.5s ease-in-out',
+				'rainbow': 'rainbow 2s linear infinite',
+				'particle-float': 'particle-float 2s ease-out forwards',
+				'3d-rotate': '3d-rotate 0.5s ease-in-out',
+				'glow-pulse': 'glow-pulse 1.5s ease-in-out infinite'
 			}
 		}
 	},

@@ -147,23 +147,12 @@ export default ComponentName;
 ```
 
 ### Adding New Pages
-1. Create component in `src/pages/`
+1. Create component in `src/components/`
 2. Add route to main router configuration
 3. Update navigation links in `Header.tsx`
 4. Add any required data to `src/data/`
 
 ## 🚢 Deployment
-
-### Lovable Platform (Recommended)
-1. Visit the [Lovable Project](https://lovable.dev/projects/90551817-668b-450a-8dc7-03078a929ec7)
-2. Click Share → Publish
-3. Your application will be automatically deployed
-
-### Custom Domain
-To connect a custom domain:
-1. Navigate to Project → Settings → Domains
-2. Click "Connect Domain"
-3. Follow the setup instructions
 
 ### Manual Deployment
 For other platforms:
@@ -175,10 +164,9 @@ npm run build
 ## 🤝 Contributing
 
 ### Making Changes
-1. **Via Lovable**: Visit the project URL and start prompting
-2. **Local Development**: Clone, make changes, and push to this repo
-3. **Direct GitHub**: Edit files directly in the GitHub interface
-4. **GitHub Codespaces**: Use the cloud development environment
+1. **Local Development**: Clone, make changes, and push to this repo
+2. **Direct GitHub**: Edit files directly in the GitHub interface
+3. **GitHub Codespaces**: Use the cloud development environment
 
 ### Pull Request Process
 1. Create a feature branch from `main`

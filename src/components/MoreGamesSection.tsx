@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import GameCard from "./GameCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface GameCardData {
   id: string;
@@ -14,6 +15,7 @@ interface GameCardData {
   bgGradient: string;
   textColor: string;
   buttonColor: string;
+  gameId: string;
   image?: string;
 }
 
@@ -35,7 +37,8 @@ const MoreGamesSection = () => {
       price: "PLAY FOR £2.50",
       bgGradient: "bg-gradient-to-br from-yellow-400 via-orange-400 to-orange-600",
       textColor: "text-white",
-      buttonColor: "bg-blue-800 hover:bg-blue-900"
+      buttonColor: "bg-blue-800 hover:bg-blue-900",
+      gameId: "euromillions"
     },
     {
       id: "instant-win",
@@ -47,7 +50,8 @@ const MoreGamesSection = () => {
       price: "PLAY FOR £3.00",
       bgGradient: "bg-gradient-to-br from-green-400 via-emerald-500 to-green-600",
       textColor: "text-white",
-      buttonColor: "bg-blue-800 hover:bg-blue-900"
+      buttonColor: "bg-blue-800 hover:bg-blue-900",
+      gameId: "instant-win"
     },
     {
       id: "euromillions-hotpicks",
@@ -59,7 +63,8 @@ const MoreGamesSection = () => {
       price: "PLAY FOR £1.50",
       bgGradient: "bg-gradient-to-br from-orange-400 via-red-400 to-red-500",
       textColor: "text-white",
-      buttonColor: "bg-blue-800 hover:bg-blue-900"
+      buttonColor: "bg-blue-800 hover:bg-blue-900",
+      gameId: "euromillions-hotpicks"
     },
     {
       id: "lotto",
@@ -71,7 +76,8 @@ const MoreGamesSection = () => {
       price: "PLAY FOR £2.00",
       bgGradient: "bg-gradient-to-br from-pink-400 via-pink-500 to-purple-600",
       textColor: "text-white",
-      buttonColor: "bg-blue-800 hover:bg-blue-900"
+      buttonColor: "bg-blue-800 hover:bg-blue-900",
+      gameId: "lotto"
     },
     {
       id: "thunderball",
@@ -83,7 +89,8 @@ const MoreGamesSection = () => {
       price: "PLAY FOR £1.00",
       bgGradient: "bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-600",
       textColor: "text-white",
-      buttonColor: "bg-blue-800 hover:bg-blue-900"
+      buttonColor: "bg-blue-800 hover:bg-blue-900",
+      gameId: "thunderball"
     },
     {
       id: "set-for-life",
@@ -95,7 +102,8 @@ const MoreGamesSection = () => {
       price: "PLAY FOR £1.50",
       bgGradient: "bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500",
       textColor: "text-white",
-      buttonColor: "bg-blue-800 hover:bg-blue-900"
+      buttonColor: "bg-blue-800 hover:bg-blue-900",
+      gameId: "set-for-life"
     }
   ];
 
@@ -193,7 +201,10 @@ const MoreGamesSection = () => {
                 className="flex-shrink-0 w-72 snap-start"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className={`${game.bgGradient} ${game.textColor} rounded-2xl overflow-hidden h-80 relative cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group`}>
+                <Link
+                  to={`/games/${game.gameId}`}
+                  className={`${game.bgGradient} ${game.textColor} rounded-2xl overflow-hidden h-80 relative cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group block`}
+                >
                   {/* Diagonal overlay effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10"></div>
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
@@ -234,7 +245,7 @@ const MoreGamesSection = () => {
 
                   {/* Hover glow effect */}
                   <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-300 rounded-2xl"></div>
-                </div>
+                </Link>
               </div>
             ))}
           </div>
@@ -277,7 +288,10 @@ const MoreGamesSection = () => {
                   className="w-full flex-shrink-0"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className={`${game.bgGradient} ${game.textColor} rounded-2xl overflow-hidden h-80 relative cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group`}>
+                  <Link
+                    to={`/games/${game.gameId}`}
+                    className={`${game.bgGradient} ${game.textColor} rounded-2xl overflow-hidden h-80 relative cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group block`}
+                  >
                     {/* Diagonal overlay effect */}
                     <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10"></div>
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
@@ -318,7 +332,7 @@ const MoreGamesSection = () => {
 
                     {/* Hover glow effect */}
                     <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-300 rounded-2xl"></div>
-                  </div>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -343,6 +357,17 @@ const MoreGamesSection = () => {
           <div className="text-center mt-2 text-xs text-gray-500">
             Auto-sliding every 5 seconds • {currentSlide + 1} of {games.length}
           </div>
+        </div>
+        
+        {/* View All Games Link */}
+        <div className="text-center mt-8">
+          <Link
+            to="/games/:gameId"
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105"
+          >
+            View All Games
+            <ChevronRight className="w-5 h-5" />
+          </Link>
         </div>
       </div>
 

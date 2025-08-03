@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface CountdownTimerProps {
   targetDate: Date;
@@ -93,6 +94,7 @@ interface EnhancedGameCardProps {
   buttonText: string;
   buttonPrice?: string;
   jackpotEstimate?: string;
+  gameId: string;
 }
 
 const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({ 
@@ -105,7 +107,8 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
   textColor, 
   buttonText, 
   buttonPrice,
-  jackpotEstimate
+  jackpotEstimate,
+  gameId
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, vx: number, vy: number}>>([]);
@@ -144,8 +147,9 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
   }, [particles]);
 
   return (
-    <div 
-      className={`${backgroundColor} ${textColor} rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer group relative h-full min-h-[400px]`}
+    <Link
+      to={`/games/${gameId}`}
+      className={`${backgroundColor} ${textColor} rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer group relative h-full min-h-[400px] block`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -200,7 +204,7 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
 
       {/* Shadow effect */}
       <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
-    </div>
+    </Link>
   );
 };
 
@@ -222,7 +226,8 @@ const EnhancedGamesShowcase = () => {
       textColor: "text-white",
       buttonText: "PLAY FOR",
       buttonPrice: "£2.00",
-      jackpotEstimate: "£5.2M"
+      jackpotEstimate: "£5.2M",
+      gameId: "lotto"
     },
     {
       game: "EUROMILLIONS",
@@ -234,7 +239,8 @@ const EnhancedGamesShowcase = () => {
       textColor: "text-white",
       buttonText: "PLAY FOR",
       buttonPrice: "£2.50",
-      jackpotEstimate: "£14M"
+      jackpotEstimate: "£14M",
+      gameId: "euromillions"
     },
     {
       game: "SET FOR LIFE",
@@ -244,7 +250,8 @@ const EnhancedGamesShowcase = () => {
       backgroundColor: "bg-teal-600",
       textColor: "text-white",
       buttonText: "PLAY FOR",
-      buttonPrice: "£1.50"
+      buttonPrice: "£1.50",
+      gameId: "set-for-life"
     }
   ];
 
@@ -326,6 +333,7 @@ const EnhancedGamesShowcase = () => {
                 buttonText={game.buttonText}
                 buttonPrice={game.buttonPrice}
                 jackpotEstimate={game.jackpotEstimate}
+                gameId={game.gameId}
               />
             </div>
           ))}
@@ -379,6 +387,7 @@ const EnhancedGamesShowcase = () => {
                     buttonText={game.buttonText}
                     buttonPrice={game.buttonPrice}
                     jackpotEstimate={game.jackpotEstimate}
+                    gameId={game.gameId}
                   />
                 </div>
               ))}

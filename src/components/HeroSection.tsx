@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   const [selectedLines, setSelectedLines] = useState(1);
@@ -17,7 +18,8 @@ const HeroSection = () => {
       price: "PLAY FOR £5.00",
       bgGradient: "from-green-400 via-emerald-500 to-green-600",
       decorativeElement: "💎",
-      image: "/instant-win-bg.png"
+      image: "/instant-win-bg.png",
+      gameId: "instant-win"
     },
     {
       id: "cashword-extra",
@@ -28,7 +30,8 @@ const HeroSection = () => {
       price: "PLAY FOR £2.00",
       bgGradient: "from-purple-500 via-pink-500 to-red-500",
       decorativeElement: "💰",
-      image: "/cashword-bg.png"
+      image: "/cashword-bg.png",
+      gameId: "instant-win"
     },
     {
       id: "lucky-lines",
@@ -39,7 +42,8 @@ const HeroSection = () => {
       price: "PLAY FOR £3.00",
       bgGradient: "from-blue-500 via-indigo-500 to-purple-600",
       decorativeElement: "🍀",
-      image: "/lucky-lines-bg.png"
+      image: "/lucky-lines-bg.png",
+      gameId: "instant-win"
     },
     {
       id: "monopoly-gold",
@@ -50,7 +54,8 @@ const HeroSection = () => {
       price: "PLAY FOR £4.00", 
       bgGradient: "from-yellow-400 via-orange-500 to-red-600",
       decorativeElement: "🎩",
-      image: "/monopoly-bg.png"
+      image: "/monopoly-bg.png",
+      gameId: "instant-win"
     }
   ];
 
@@ -101,7 +106,10 @@ const HeroSection = () => {
         {/* Mobile Layout - Stacked Cards */}
         <div className="md:hidden">
           {/* Set For Life Card */}
-          <div className="relative group cursor-pointer transition-all duration-300 hover:brightness-95 min-h-[400px]">
+          <Link 
+            to="/games/set-for-life"
+            className="relative group cursor-pointer transition-all duration-300 hover:brightness-95 min-h-[400px] block"
+          >
             {/* Background with celebration image */}
             <div 
               className="absolute inset-0 bg-gradient-to-br from-cyan-400 via-cyan-500 to-cyan-600"
@@ -163,14 +171,20 @@ const HeroSection = () => {
                     <span className="text-xs font-medium">How many lines?</span>
                     <div className="flex items-center space-x-1">
                       <button
-                        onClick={() => updateLines(-1)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          updateLines(-1);
+                        }}
                         className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-blue-500 transition-colors"
                       >
                         <Minus className="h-3 w-3" />
                       </button>
                       <span className="text-lg font-bold min-w-[2rem] text-center">{selectedLines}</span>
                       <button
-                        onClick={() => updateLines(1)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          updateLines(1);
+                        }}
                         className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-blue-500 transition-colors"
                       >
                         <Plus className="h-3 w-3" />
@@ -182,6 +196,7 @@ const HeroSection = () => {
                     <span className="text-xs font-bold">Total: £{(selectedLines * 1.50).toFixed(2)}</span>
                     <Button 
                       variant="outline"
+                      onClick={(e) => e.preventDefault()}
                       className="text-xs py-1 px-3 border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-bold"
                     >
                       QUICK LUCKY DIP
@@ -190,10 +205,13 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Featured Game Card */}
-          <div className="relative group cursor-pointer transition-all duration-300 hover:brightness-95 min-h-[300px] mt-4">
+          <Link 
+            to={`/games/${currentGame.gameId}`}
+            className="relative group cursor-pointer transition-all duration-300 hover:brightness-95 min-h-[300px] mt-4 block"
+          >
             <div className={`absolute inset-0 bg-gradient-to-br ${currentGame.bgGradient}`}></div>
             
             {/* Decorative geometric shapes */}
@@ -238,13 +256,16 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Desktop Layout - Side by Side */}
         <div className="hidden md:flex min-h-[500px]">
           {/* Left Side - Set For Life with Full Image Coverage */}
-          <div className="flex-1 relative group cursor-pointer transition-all duration-300 hover:brightness-95">
+          <Link 
+            to="/games/set-for-life"
+            className="flex-1 relative group cursor-pointer transition-all duration-300 hover:brightness-95 block"
+          >
             {/* Background with win.jpg image covering full left side */}
             <div 
               className="absolute inset-0"
@@ -305,14 +326,20 @@ const HeroSection = () => {
                     <span className="text-sm font-medium text-gray-700">How many lines?</span>
                     <div className="flex items-center space-x-2">
                       <button
-                        onClick={() => updateLines(-1)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          updateLines(-1);
+                        }}
                         className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-blue-500 transition-colors bg-white"
                       >
                         <Minus className="h-4 w-4" />
                       </button>
                       <span className="text-2xl font-bold min-w-[3rem] text-center text-blue-600">{selectedLines}</span>
                       <button
-                        onClick={() => updateLines(1)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          updateLines(1);
+                        }}
                         className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-blue-500 transition-colors bg-white"
                       >
                         <Plus className="h-4 w-4" />
@@ -324,6 +351,7 @@ const HeroSection = () => {
                     <span className="text-sm font-bold text-gray-900">Total: £{(selectedLines * 1.50).toFixed(2)}</span>
                     <Button 
                       variant="outline"
+                      onClick={(e) => e.preventDefault()}
                       className="text-sm py-1 px-4 border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-bold bg-white"
                     >
                       QUICK LUCKY DIP
@@ -332,10 +360,13 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Right Side - Featured Game (Rotates Hourly) */}
-          <div className="flex-1 relative group cursor-pointer transition-all duration-300 hover:brightness-95">
+          <Link 
+            to={`/games/${currentGame.gameId}`}
+            className="flex-1 relative group cursor-pointer transition-all duration-300 hover:brightness-95 block"
+          >
             <div className={`absolute inset-0 bg-gradient-to-br ${currentGame.bgGradient}`}></div>
             
             {/* Decorative geometric shapes */}
@@ -414,11 +445,11 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </section>
     </>
   );
-};
+}
 
 export default HeroSection;

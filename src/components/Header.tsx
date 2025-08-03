@@ -10,14 +10,16 @@ function GamesMegaMenu({ isOpen, onClose }) {
       subtitle: "LOTTO",
       amount: "£5.3M",
       color: "bg-gradient-to-br from-red-500 to-red-600",
-      textColor: "text-white"
+      textColor: "text-white",
+      gameId: "lotto"
     },
     {
       title: "This Tuesday", 
       subtitle: "EUROMILLIONS",
       amount: "£157M",
       color: "bg-gradient-to-br from-orange-400 to-orange-500",
-      textColor: "text-white"
+      textColor: "text-white",
+      gameId: "euromillions"
     },
     {
       title: "This Monday",
@@ -26,7 +28,8 @@ function GamesMegaMenu({ isOpen, onClose }) {
       subAmount: "EVERY MONTH",
       extraText: "FOR 30 YEARS",
       color: "bg-gradient-to-br from-cyan-400 to-cyan-500",
-      textColor: "text-white"
+      textColor: "text-white",
+      gameId: "set-for-life"
     }
   ];
 
@@ -36,21 +39,24 @@ function GamesMegaMenu({ isOpen, onClose }) {
       subtitle: "LOTTO HOTPICKS",
       amount: "£350K",
       color: "bg-gradient-to-br from-red-500 to-red-600",
-      textColor: "text-white"
+      textColor: "text-white",
+      gameId: "lotto-hotpicks"
     },
     {
       title: "This Tuesday",
       subtitle: "EUROMILLIONS HOTPICKS", 
       amount: "£1M",
       color: "bg-gradient-to-br from-orange-500 to-orange-600",
-      textColor: "text-white"
+      textColor: "text-white",
+      gameId: "euromillions-hotpicks"
     },
     {
       title: "This Tuesday",
       subtitle: "THUNDERBALL",
       amount: "£500K",
       color: "bg-gradient-to-br from-purple-500 to-purple-600",
-      textColor: "text-white"
+      textColor: "text-white",
+      gameId: "thunderball"
     }
   ];
 
@@ -64,8 +70,10 @@ function GamesMegaMenu({ isOpen, onClose }) {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Main Games Row */}
           {games.map((game, idx) => (
-            <div 
-              key={idx} 
+            <Link
+              key={idx}
+              to={`/games/${game.gameId}`}
+              onClick={onClose}
               className={`${game.color} ${game.textColor} p-4 rounded-lg relative overflow-hidden hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer`}
             >
               <div className="relative z-10">
@@ -76,11 +84,15 @@ function GamesMegaMenu({ isOpen, onClose }) {
                 {game.extraText && <div className="text-xs">{game.extraText}</div>}
               </div>
               <div className="absolute top-0 right-0 text-4xl opacity-20">*</div>
-            </div>
+            </Link>
           ))}
           
           {/* Instant Games */}
-          <div className="bg-green-500 text-white p-4 rounded-lg hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer">
+          <Link
+            to="/games"
+            onClick={onClose}
+            className="bg-green-500 text-white p-4 rounded-lg hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer"
+          >
             <div className="text-sm font-bold mb-1">INSTANT</div>
             <div className="text-sm font-bold mb-2">WIN GAMES</div>
             <button className="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold hover:bg-green-700 transition">
@@ -90,35 +102,45 @@ function GamesMegaMenu({ isOpen, onClose }) {
               <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-sm">🎯</div>
               <div className="w-8 h-8 bg-teal-500 rounded-full flex items-center justify-center text-sm">🎮</div>
             </div>
-          </div>
+          </Link>
         </div>
         
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
           {/* Hotpicks Row */}
           {hotpicks.map((game, idx) => (
-            <div 
-              key={idx} 
+            <Link
+              key={idx}
+              to={`/games/${game.gameId}`}
+              onClick={onClose}
               className={`${game.color} ${game.textColor} p-4 rounded-lg relative hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer`}
             >
               <div className="text-xs font-medium mb-1">{game.title}</div>
               <div className="text-sm font-bold mb-1">{game.subtitle}</div>
               <div className="text-2xl font-bold">{game.amount}</div>
-            </div>
+            </Link>
           ))}
           
           {/* Scratchcards */}
-          <div className="bg-blue-600 text-white p-4 rounded-lg hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer">
+          <Link
+            to="/games"
+            onClick={onClose}
+            className="bg-blue-600 text-white p-4 rounded-lg hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer"
+          >
             <div className="text-sm font-bold mb-2">SCRATCHCARDS</div>
             <button className="bg-white text-blue-600 px-3 py-1 rounded text-xs font-semibold hover:bg-gray-100 transition">
               FIND OUT MORE
             </button>
-          </div>
+          </Link>
         </div>
         
         <div className="text-center mt-4">
-          <a href="#" className="text-blue-600 font-semibold hover:underline text-sm">
+          <Link 
+            to="/games" 
+            onClick={onClose}
+            className="text-blue-600 font-semibold hover:underline text-sm"
+          >
             Discover all games
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -128,12 +150,12 @@ function GamesMegaMenu({ isOpen, onClose }) {
 // Results Mega Menu Component  
 function ResultsMegaMenu({ isOpen, onClose }) {
   const resultGames = [
-    { name: "LOTTO", color: "bg-red-500", buttonColor: "border-red-500 text-red-500" },
-    { name: "EUROMILLIONS", color: "bg-orange-500", buttonColor: "border-orange-500 text-orange-500" },
-    { name: "SET FOR LIFE", color: "bg-cyan-500", buttonColor: "border-cyan-500 text-cyan-500" },
-    { name: "LOTTO HOTPICKS", color: "bg-red-500", buttonColor: "border-red-500 text-red-500" },
-    { name: "EUROMILLIONS HOTPICKS", color: "bg-orange-500", buttonColor: "border-orange-500 text-orange-500" },
-    { name: "THUNDERBALL", color: "bg-purple-500", buttonColor: "border-purple-500 text-purple-500" }
+    { name: "LOTTO", color: "bg-red-500", buttonColor: "border-red-500 text-red-500", gameId: "lotto" },
+    { name: "EUROMILLIONS", color: "bg-orange-500", buttonColor: "border-orange-500 text-orange-500", gameId: "euromillions" },
+    { name: "SET FOR LIFE", color: "bg-cyan-500", buttonColor: "border-cyan-500 text-cyan-500", gameId: "set-for-life" },
+    { name: "LOTTO HOTPICKS", color: "bg-red-500", buttonColor: "border-red-500 text-red-500", gameId: "lotto-hotpicks" },
+    { name: "EUROMILLIONS HOTPICKS", color: "bg-orange-500", buttonColor: "border-orange-500 text-orange-500", gameId: "euromillions-hotpicks" },
+    { name: "THUNDERBALL", color: "bg-purple-500", buttonColor: "border-purple-500 text-purple-500", gameId: "thunderball" }
   ];
 
   if (!isOpen) return null;
@@ -149,11 +171,13 @@ function ResultsMegaMenu({ isOpen, onClose }) {
                 <div key={idx} className="bg-white border-2 border-gray-200 p-6 rounded-lg hover:shadow-md transition">
                   <div className={`w-full h-3 ${game.color} rounded mb-4`}></div>
                   <h3 className="font-bold text-lg mb-4">{game.name}</h3>
-                  <button className={`w-full border-2 ${game.buttonColor} py-2 px-4 rounded font-semibold hover:bg-gray-50 transition`}>
-                    <a href="/check-numbers" className="text-center">
+                  <Link
+                    to="/check-numbers"
+                    onClick={onClose}
+                    className={`w-full border-2 ${game.buttonColor} py-2 px-4 rounded font-semibold hover:bg-gray-50 transition block text-center`}
+                  >
                     CHECK MY NUMBERS
-                    </a>
-                  </button>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -163,9 +187,13 @@ function ResultsMegaMenu({ isOpen, onClose }) {
                 <div className="text-sm mb-1">🎫</div>
                 <div className="font-semibold">Bought your ticket online? Sign in to see if you've won. Fingers crossed!</div>
               </div>
-              <button className="bg-white text-blue-900 px-6 py-2 rounded font-semibold ml-4 hover:bg-gray-100 transition">
+              <Link 
+                to="/results"
+                onClick={onClose}
+                className="bg-white text-blue-900 px-6 py-2 rounded font-semibold ml-4 hover:bg-gray-100 transition"
+              >
                 CHECK RESULTS
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -190,9 +218,13 @@ function ResultsMegaMenu({ isOpen, onClose }) {
             </div>
             
             <div className="mt-4 text-center">
-              <a href="#" className="text-blue-600 font-semibold hover:underline">
+              <Link 
+                to="/results" 
+                onClick={onClose}
+                className="text-blue-600 font-semibold hover:underline"
+              >
                 See all results
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -225,12 +257,12 @@ export default function Header() {
     <>
       <header className="bg-gradient-to-r from-indigo-600 via-blue-500 to-cyan-400 shadow sticky top-0 z-50 text-white">
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex justify-between items-center">
-          <div className="text-xl font-bold text-white">
+          <Link to="/" className="text-xl font-bold text-white hover:text-yellow-300 transition-colors">
             National Lottery
-          </div>
+          </Link>
           
           <nav className="hidden md:flex space-x-8 text-white font-medium">
-            <a href="/" className="hover:text-yellow-300 transition-colors duration-200">Home</a>
+            <Link to="/" className="hover:text-yellow-300 transition-colors duration-200">Home</Link>
             <button 
               onClick={handleGamesClick}
               className="hover:text-yellow-300 transition-colors duration-200 flex items-center"
@@ -243,8 +275,8 @@ export default function Header() {
             >
               Results {resultsOpen ? <ChevronDown className="ml-1 rotate-180 transition-transform" size={16} /> : <ChevronDown className="ml-1 transition-transform" size={16} />}
             </button>
-            <a href="#" className="hover:text-yellow-300 transition-colors duration-200">Winners & Good Causes</a>
-            <a href="#" className="hover:text-yellow-300 transition-colors duration-200">Healthy Play</a>
+            <Link to="/games" className="hover:text-yellow-300 transition-colors duration-200">Winners & Good Causes</Link>
+            <Link to="/games" className="hover:text-yellow-300 transition-colors duration-200">Healthy Play</Link>
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -252,15 +284,12 @@ export default function Header() {
               to="/register" 
               className="text-white underline hover:text-yellow-300 transition-colors duration-200"
               onClick={() => setMobileOpen(false)}>
-              
-                Register
-              
+              Register
             </Link>
             <Link 
               to="/sign-in"
               className="text-white underline hover:text-yellow-300 transition-colors duration-200"
               onClick={() => setMobileOpen(false)}>
-                
               <button className="bg-white text-blue-900 px-6 py-2 rounded font-semibold hover:bg-yellow-300 hover:text-blue-900 transition-colors duration-200">
                 SIGN IN
               </button>
@@ -277,10 +306,14 @@ export default function Header() {
 
         {mobileOpen && (
           <div className="md:hidden bg-blue-800 px-4 py-4 space-y-3">
-            <a href="#" className="block text-white">Home</a>
+            <Link to="/" className="block text-white" onClick={() => setMobileOpen(false)}>Home</Link>
             <button onClick={handleGamesClick} className="block text-white text-left w-full">Games</button>
             <button onClick={handleResultsClick} className="block text-white text-left w-full">Results</button>
-            <a href="#" className="block text-white">Good Causes</a>
+            <Link to="/games" className="block text-white" onClick={() => setMobileOpen(false)}>Good Causes</Link>
+            <div className="pt-4 border-t border-blue-700">
+              <Link to="/register" className="block text-white mb-3" onClick={() => setMobileOpen(false)}>Register</Link>
+              <Link to="/sign-in" className="block text-white" onClick={() => setMobileOpen(false)}>Sign In</Link>
+            </div>
           </div>
         )}
       </header>

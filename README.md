@@ -1,73 +1,231 @@
-# Welcome to your Lovable project
+# National Lottery Application
 
-## Project info
+A modern, responsive lottery application built with React, TypeScript, and Tailwind CSS. This application provides a complete lottery experience with game management, ticket purchasing, result checking, and user authentication.
 
-**URL**: https://lovable.dev/projects/90551817-668b-450a-8dc7-03078a929ec7
+## 🎯 Project Overview
 
-## How can I edit this code?
+This is a full-featured lottery platform that includes:
+- **Game Showcase**: Interactive displays for various lottery games (Lotto, EuroMillions, Set For Life, Thunderball, etc.)
+- **Ticket Management**: Buy tickets, check numbers, and view results
+- **User Authentication**: Registration and sign-in functionality
+- **Responsive Design**: Optimized for both desktop and mobile devices
+- **Real-time Countdowns**: Live countdown timers for upcoming draws
 
-There are several ways of editing your application.
+## 🚀 Quick Start
 
-**Use Lovable**
+### Prerequisites
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/90551817-668b-450a-8dc7-03078a929ec7) and start prompting.
+Before you begin, ensure you have the following installed on your machine:
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Node.js** (version 16.0 or higher) - [Download here](https://nodejs.org/)
+- **npm** (comes with Node.js) or **yarn**
+- **Git** - [Download here](https://git-scm.com/)
 
-**Use your preferred IDE**
+### Installation & Setup
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Clone the repository**
+   ```bash
+   git clone <YOUR_GIT_URL>
+   cd <YOUR_PROJECT_NAME>
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or if you prefer yarn
+   yarn install
+   ```
 
-Follow these steps:
+3. **Start the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+4. **Open your browser**
+   Navigate to `http://localhost:5173` (or the port shown in your terminal)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Available Scripts
 
-# Step 3: Install the necessary dependencies.
-npm i
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build the project for production
+- `npm run build:dev` - Build in development mode
+- `npm run preview` - Preview the production build locally
+- `npm run lint` - Run ESLint to check code quality
+- `npm run build:css` - Watch and build Tailwind CSS (if needed)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## 🛠 Technology Stack
+
+- **Frontend Framework**: React 18.3.1
+- **Build Tool**: Vite 5.4.1
+- **Language**: TypeScript 5.5.3
+- **Styling**: Tailwind CSS 3.4.1
+- **UI Components**: shadcn/ui (Radix UI primitives)
+- **Routing**: React Router DOM 6.30.1
+- **State Management**: React Query (TanStack Query)
+- **Form Handling**: React Hook Form with Zod validation
+- **Icons**: Lucide React
+- **Date Handling**: date-fns
+
+## 📁 Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui components
+│   ├── Header.tsx      # Main navigation header
+│   ├── Footer.tsx      # Site footer
+│   ├── GameCard.tsx    # Individual game display cards
+│   └── ...
+├── pages/              # Page components
+│   ├── Index.tsx       # Home page
+│   ├── GamesPage.tsx   # Games listing page
+│   ├── SignInPage.tsx  # User authentication
+│   └── ...
+├── data/               # Static data and configurations
+├── lib/                # Utility functions and configurations
+└── styles/             # Global styles and Tailwind config
 ```
 
-**Edit a file directly in GitHub**
+## 🎮 Key Features
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Game Management
+- **Live Game Showcase**: Dynamic display of current lottery games
+- **Countdown Timers**: Real-time countdown to draw dates
+- **Interactive Game Cards**: Hover effects and animations
+- **Responsive Carousels**: Auto-sliding game carousels on mobile
 
-**Use GitHub Codespaces**
+### User Experience
+- **Mega Menus**: Rich navigation with game previews
+- **Mobile-First Design**: Optimized for all screen sizes
+- **Smooth Animations**: Tailwind CSS animations and transitions
+- **Loading States**: Interactive feedback for user actions
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Pages & Functionality
+- **Home Page**: Hero section with featured games
+- **Games Page**: Comprehensive game listings and comparisons
+- **Buy Tickets**: Ticket purchasing interface
+- **Check Numbers**: Number verification system
+- **Results**: Latest draw results display
+- **Authentication**: User registration and sign-in
 
-## What technologies are used for this project?
+## 🎨 Styling & Design
 
-This project is built with:
+The application uses a modern design system with:
+- **Gradient Backgrounds**: Eye-catching gradient color schemes
+- **Card-based Layout**: Clean, organized content presentation
+- **Hover Effects**: Interactive elements with smooth transitions
+- **Responsive Typography**: Scalable text for all devices
+- **Custom Animations**: Tailwind CSS and custom keyframe animations
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🔧 Development Guidelines
 
-## How can I deploy this project?
+### Code Style
+- Use TypeScript for all new components
+- Follow React functional component patterns with hooks
+- Implement proper error boundaries and loading states
+- Use Tailwind CSS utility classes for styling
 
-Simply open [Lovable](https://lovable.dev/projects/90551817-668b-450a-8dc7-03078a929ec7) and click on Share -> Publish.
+### Component Structure
+```typescript
+// Example component structure
+import React, { useState } from 'react';
+import { ComponentProps } from './types';
 
-## Can I connect a custom domain to my Lovable project?
+const ComponentName: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
+  const [state, setState] = useState();
+  
+  return (
+    <div className="tailwind-classes">
+      {/* Component content */}
+    </div>
+  );
+};
 
-Yes, you can!
+export default ComponentName;
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Adding New Pages
+1. Create component in `src/pages/`
+2. Add route to main router configuration
+3. Update navigation links in `Header.tsx`
+4. Add any required data to `src/data/`
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## 🚢 Deployment
+
+### Lovable Platform (Recommended)
+1. Visit the [Lovable Project](https://lovable.dev/projects/90551817-668b-450a-8dc7-03078a929ec7)
+2. Click Share → Publish
+3. Your application will be automatically deployed
+
+### Custom Domain
+To connect a custom domain:
+1. Navigate to Project → Settings → Domains
+2. Click "Connect Domain"
+3. Follow the setup instructions
+
+### Manual Deployment
+For other platforms:
+```bash
+npm run build
+# Deploy the contents of the 'dist' folder to your hosting provider
+```
+
+## 🤝 Contributing
+
+### Making Changes
+1. **Via Lovable**: Visit the project URL and start prompting
+2. **Local Development**: Clone, make changes, and push to this repo
+3. **Direct GitHub**: Edit files directly in the GitHub interface
+4. **GitHub Codespaces**: Use the cloud development environment
+
+### Pull Request Process
+1. Create a feature branch from `main`
+2. Make your changes and test thoroughly
+3. Ensure all linting passes: `npm run lint`
+4. Submit a pull request with a clear description
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Port already in use**
+```bash
+# Kill process on port 5173
+npx kill-port 5173
+# Or use a different port
+npm run dev -- --port 3000
+```
+
+**Node modules issues**
+```bash
+# Clear cache and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+**Build errors**
+```bash
+# Check TypeScript errors
+npx tsc --noEmit
+# Clear Vite cache
+rm -rf node_modules/.vite
+```
+
+### Environment Variables
+If you need environment variables, create a `.env.local` file:
+```env
+VITE_API_URL=your_api_url_here
+VITE_APP_TITLE=National Lottery
+```
+
+## 📄 License
+
+This project is private and confidential. All rights reserved.
+
+---
+
+**Happy Coding! 🎰**
+
+Make sure to read through this README completely before starting development. If you encounter any issues or have questions, don't hesitate to reach out to the team.

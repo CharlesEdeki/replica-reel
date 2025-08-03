@@ -409,10 +409,10 @@ const EnhancedGamesShowcase = () => {
             ))}
           </div>
 
-          {/* Auto-play indicator */}
+          {/* Auto-play indicator
           <div className="text-center mt-2 text-xs text-gray-500">
             Auto-sliding every 5 seconds • {currentSlide + 1} of {games.length}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

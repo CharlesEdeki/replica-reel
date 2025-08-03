@@ -354,9 +354,9 @@ const MoreGamesSection = () => {
           </div>
 
           {/* Auto-play indicator */}
-          <div className="text-center mt-2 text-xs text-gray-500">
+          {/* <div className="text-center mt-2 text-xs text-gray-500">
             Auto-sliding every 5 seconds • {currentSlide + 1} of {games.length}
-          </div>
+          </div> */}
         </div>
         
         {/* View All Games Link */}

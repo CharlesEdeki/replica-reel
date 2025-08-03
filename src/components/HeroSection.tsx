@@ -250,10 +250,10 @@ const HeroSection = () => {
                   {currentGame.price}
                 </Button>
                 
-                {/* Next game indicator */}
+                {/* Next game indicator
                 <div className="mt-2 text-xs opacity-75">
                   <p>Game rotates hourly • Next: {featuredGames[(currentRightGame + 1) % featuredGames.length].subtitle}</p>
-                </div>
+                </div> */}
               </div>
             </div>
           </Link>
@@ -439,10 +439,10 @@ const HeroSection = () => {
                   {currentGame.price}
                 </Button>
                 
-                {/* Next game indicator */}
+                {/* Next game indicator
                 <div className="mt-4 text-xs opacity-75 bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full inline-block">
                   <p>Game rotates hourly • Next: {featuredGames[(currentRightGame + 1) % featuredGames.length].subtitle}</p>
-                </div>
+                </div> */}
               </div>
             </div>
           </Link>

@@ -1,29 +1,117 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, PoundSterling, Play, ArrowRight, Star, Target, LogIn } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import Header from '@/components/Header';
+import Header from "@/components/Header";
 import Footer from '@/components/Footer';
-import { games } from '@/data/games';
+
+// Mock useAuth hook for demonstration
+const useAuth = () => ({
+  isAuthenticated: false, // Change this to test different states
+  user: null
+});
+
+const games = [
+  {
+    id: 'lotto',
+    name: 'Lotto',
+    tagline: 'The UK\'s favourite lottery',
+    description: 'Play Lotto for your chance to win life-changing jackpots starting from £2 million. With draws twice a week, you have plenty of chances to become a millionaire.',
+    ticketPrice: 2.00,
+    minJackpot: '£2M+',
+    maxNumbers: 6,
+    numberRange: '1-59',
+    drawDays: ['Wednesday', 'Saturday'],
+    drawTime: '8:00 PM',
+    colors: {
+      primary: 'bg-red-600'
+    },
+    bonusNumbers: {
+      name: 'Bonus Ball',
+      count: 1,
+      range: '1-59'
+    }
+  },
+  {
+    id: 'euromillions',
+    name: 'EuroMillions',
+    tagline: 'Europe\'s biggest lottery',
+    description: 'EuroMillions offers some of the biggest jackpots in the world. Play across 9 European countries for prizes that can change your life forever.',
+    ticketPrice: 2.50,
+    minJackpot: '£14M+',
+    maxNumbers: 5,
+    numberRange: '1-50',
+    drawDays: ['Tuesday', 'Friday'],
+    drawTime: '8:00 PM',
+    colors: {
+      primary: 'bg-blue-600'
+    },
+    bonusNumbers: {
+      name: 'Lucky Stars',
+      count: 2,
+      range: '1-12'
+    }
+  },
+  {
+    id: 'thunderball',
+    name: 'Thunderball',
+    tagline: 'Play for £500,000',
+    description: 'Thunderball offers a top prize of £500,000 and better odds of winning. With four draws each week, you have more chances to win.',
+    ticketPrice: 1.00,
+    minJackpot: '£500K',
+    maxNumbers: 5,
+    numberRange: '1-39',
+    drawDays: ['Tuesday', 'Wednesday', 'Friday', 'Saturday'],
+    drawTime: '8:00 PM',
+    colors: {
+      primary: 'bg-purple-600'
+    },
+    bonusNumbers: {
+      name: 'Thunderball',
+      count: 1,
+      range: '1-14'
+    }
+  },
+  {
+    id: 'set-for-life',
+    name: 'Set For Life',
+    tagline: 'Win £10,000 every month for 30 years',
+    description: 'Set For Life offers a unique prize structure. Win the top prize and receive £10,000 every month for 30 years - that\'s £3.6 million in total!',
+    ticketPrice: 1.50,
+    minJackpot: '£10K/month',
+    maxNumbers: 5,
+    numberRange: '1-47',
+    drawDays: ['Monday', 'Thursday'],
+    drawTime: '8:00 PM',
+    colors: {
+      primary: 'bg-teal-600'
+    },
+    bonusNumbers: {
+      name: 'Life Ball',
+      count: 1,
+      range: '1-10'
+    }
+  }
+];
 
 const GamesPage = () => {
   const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
 
   const handlePlayGame = (gameId: string) => {
     if (!isAuthenticated) {
-      // Redirect to sign-in page with return path
-      navigate(`/sign-in?returnTo=/games/${gameId}/play`);
+      // In a real app, this would use useNavigate
+      window.location.href = `/sign-in?returnTo=/games/${gameId}/play`;
     } else {
       // Navigate to game play interface
-      navigate(`/games/${gameId}/play`);
+      window.location.href = `/games/${gameId}/play`;
     }
+  };
+
+  const handleViewDetails = (gameId: string) => {
+    window.location.href = `/games/${gameId}`;
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-teal-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
@@ -39,28 +127,28 @@ const GamesPage = () => {
                 <span className="font-medium">Sign in required to play</span>
               </div>
               <div className="flex gap-3 justify-center">
-                <Link 
-                  to="/sign-in"
+                <a 
+                  href="/sign-in"
                   className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition"
                 >
                   Sign In
-                </Link>
-                <Link 
-                  to="/register"
+                </a>
+                <a 
+                  href="/register"
                   className="border-2 border-white text-white px-6 py-2 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
                 >
                   Register
-                </Link>
+                </a>
               </div>
             </div>
           )}
           <div className="flex flex-wrap justify-center gap-4">
-            <Link 
-              to="/results"
+            <a 
+              href="/results"
               className="border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
             >
               Check Results
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -80,7 +168,7 @@ const GamesPage = () => {
                       <p className="text-white/90 text-lg">{game.tagline}</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold">£{game.ticketPrice}</div>
+                      <div className="text-2xl font-bold">£{game.ticketPrice.toFixed(2)}</div>
                       <div className="text-white/80 text-sm">per line</div>
                     </div>
                   </div>
@@ -144,13 +232,13 @@ const GamesPage = () => {
                       <Play className="w-5 h-5" />
                       {isAuthenticated ? 'Play Now' : 'Sign In to Play'}
                     </button>
-                    <Link
-                      to={`/games/${game.id}`}
+                    <button
+                      onClick={() => handleViewDetails(game.id)}
                       className="border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition flex items-center justify-center gap-2"
                     >
                       Details
                       <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -159,8 +247,65 @@ const GamesPage = () => {
         </div>
       </section>
 
-      {/* How to Play Section */}
+      {/* Game Comparison */}
       <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Compare Games</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Game</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Price</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Jackpot</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Numbers</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Draws/Week</th>
+                    <th className="px-6 py-4 text-left font-semibold text-gray-900">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {games.map((game, index) => (
+                    <tr key={game.id} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-4 h-4 rounded-full ${game.colors.primary}`}></div>
+                          <div>
+                            <div className="font-semibold text-gray-900">{game.name}</div>
+                            <div className="text-sm text-gray-600">{game.tagline}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 font-semibold text-gray-900">£{game.ticketPrice.toFixed(2)}</td>
+                      <td className="px-6 py-4 font-semibold text-gray-900">{game.minJackpot}</td>
+                      <td className="px-6 py-4 text-gray-700">
+                        {game.maxNumbers} from {game.numberRange}
+                        {game.bonusNumbers && (
+                          <div className="text-sm text-gray-500">
+                            + {game.bonusNumbers.count} {game.bonusNumbers.name}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-gray-700">{game.drawDays.length}</td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => handleViewDetails(game.id)}
+                          className="text-blue-600 hover:text-blue-800 font-semibold"
+                        >
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How to Play Section */}
+      <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">How to Play</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -189,6 +334,31 @@ const GamesPage = () => {
         </div>
       </section>
 
+      {/* Call to Action */}
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Playing?</h2>
+          <p className="text-xl text-white/90 mb-8">
+            Join millions of players and support good causes across the UK.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href={isAuthenticated ? "/games/lotto/play" : "/sign-in?returnTo=/games/lotto/play"}
+              className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition text-lg"
+            >
+              <Play className="w-5 h-5" />
+              {isAuthenticated ? 'Play Now' : 'Sign In to Play'}
+            </a>
+            <a
+              href="/register"
+              className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
+            >
+              Create Account
+              <ArrowRight className="w-5 h-5" />
+            </a>
+          </div>
+        </div>
+      </section>
       <Footer />
     </div>
   );

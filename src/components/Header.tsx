@@ -1,10 +1,13 @@
-import { Menu, X, ChevronDown, User, LogOut } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Menu, X, ChevronDown, User, LogOut, Play } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 // Games Mega Menu Component
 function GamesMegaMenu({ isOpen, onClose }) {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  
   const games = [
     {
       title: "This Wednesday",
@@ -61,6 +64,15 @@ function GamesMegaMenu({ isOpen, onClose }) {
     }
   ];
 
+  const handleGameClick = (gameId) => {
+    if (!isAuthenticated) {
+      navigate(`/sign-in?returnTo=/games/${gameId}/play`);
+    } else {
+      navigate(`/games/${gameId}/play`);
+    }
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -71,11 +83,10 @@ function GamesMegaMenu({ isOpen, onClose }) {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Main Games Row */}
           {games.map((game, idx) => (
-            <Link
+            <button
               key={idx}
-              to={`/games/${game.gameId}`}
-              onClick={onClose}
-              className={`${game.color} ${game.textColor} p-4 rounded-lg relative overflow-hidden hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer`}
+              onClick={() => handleGameClick(game.gameId)}
+              className={`${game.color} ${game.textColor} p-4 rounded-lg relative overflow-hidden hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer text-left`}
             >
               <div className="relative z-10">
                 <div className="text-xs font-medium mb-1">{game.title}</div>
@@ -85,7 +96,7 @@ function GamesMegaMenu({ isOpen, onClose }) {
                 {game.extraText && <div className="text-xs">{game.extraText}</div>}
               </div>
               <div className="absolute top-0 right-0 text-4xl opacity-20">*</div>
-            </Link>
+            </button>
           ))}
           
           {/* Instant Games */}
@@ -109,16 +120,15 @@ function GamesMegaMenu({ isOpen, onClose }) {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
           {/* Hotpicks Row */}
           {hotpicks.map((game, idx) => (
-            <Link
+            <button
               key={idx}
-              to={`/games/${game.gameId}`}
-              onClick={onClose}
-              className={`${game.color} ${game.textColor} p-4 rounded-lg relative hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer`}
+              onClick={() => handleGameClick(game.gameId)}
+              className={`${game.color} ${game.textColor} p-4 rounded-lg relative hover:scale-105 hover:shadow-lg transform transition-all duration-300 cursor-pointer text-left`}
             >
               <div className="text-xs font-medium mb-1">{game.title}</div>
               <div className="text-sm font-bold mb-1">{game.subtitle}</div>
               <div className="text-2xl font-bold">{game.amount}</div>
-            </Link>
+            </button>
           ))}
           
           {/* Scratchcards */}
@@ -173,7 +183,7 @@ function ResultsMegaMenu({ isOpen, onClose }) {
                   <div className={`w-full h-3 ${game.color} rounded mb-4`}></div>
                   <h3 className="font-bold text-lg mb-4">{game.name}</h3>
                   <Link
-                    to="/check-numbers"
+                    to="/results"
                     onClick={onClose}
                     className={`w-full border-2 ${game.buttonColor} py-2 px-4 rounded font-semibold hover:bg-gray-50 transition block text-center`}
                   >
@@ -186,7 +196,7 @@ function ResultsMegaMenu({ isOpen, onClose }) {
             <div className="bg-blue-900 text-white p-6 rounded-lg flex items-center justify-between">
               <div>
                 <div className="text-sm mb-1">🎫</div>
-                <div className="font-semibold">Bought your ticket online? Sign in to see if you've won. Fingers crossed!</div>
+                <div className="font-semibold">Bought your ticket online? Your tickets are in your dashboard!</div>
               </div>
               <Link 
                 to="/results"
@@ -239,6 +249,8 @@ export default function Header() {
   const [gamesOpen, setGamesOpen] = useState(false);
   const [resultsOpen, setResultsOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const closeAllMenus = () => {
     setGamesOpen(false);
@@ -251,12 +263,28 @@ export default function Header() {
   };
 
   const handleResultsClick = () => {
+    // Check if user is authenticated before showing results
+    if (!isAuthenticated) {
+      navigate(`/sign-in?returnTo=/results`);
+      return;
+    }
     setResultsOpen(!resultsOpen);
     setGamesOpen(false);
   };
 
   const handleLogout = () => {
     logout();
+    setMobileOpen(false);
+    closeAllMenus();
+    navigate('/');
+  };
+
+  const handlePlayNow = () => {
+    if (!isAuthenticated) {
+      navigate(`/sign-in?returnTo=${location.pathname}`);
+    } else {
+      navigate('/games');
+    }
     setMobileOpen(false);
     closeAllMenus();
   };
@@ -275,23 +303,44 @@ export default function Header() {
               onClick={handleGamesClick}
               className="hover:text-yellow-300 transition-colors duration-200 flex items-center"
             >
-              Games {gamesOpen ? <ChevronDown className="ml-1 rotate-180 transition-transform" size={16} /> : <ChevronDown className="ml-1 transition-transform" size={16} />}
+              Games 
+              <ChevronDown 
+                className={`ml-1 transition-transform ${gamesOpen ? 'rotate-180' : ''}`} 
+                size={16} 
+              />
             </button>
             <button 
               onClick={handleResultsClick}
               className="hover:text-yellow-300 transition-colors duration-200 flex items-center"
             >
-              Results {resultsOpen ? <ChevronDown className="ml-1 rotate-180 transition-transform" size={16} /> : <ChevronDown className="ml-1 transition-transform" size={16} />}
+              Results 
+              <ChevronDown 
+                className={`ml-1 transition-transform ${resultsOpen ? 'rotate-180' : ''}`} 
+                size={16} 
+              />
             </button>
             {isAuthenticated && (
-              <Link to="/dashboard" className="hover:text-yellow-300 transition-colors duration-200">My Tickets</Link>
+              <>
+                <Link to="/dashboard" className="hover:text-yellow-300 transition-colors duration-200">
+                  My Dashboard
+                </Link>
+                <Link to="/check-numbers" className="hover:text-yellow-300 transition-colors duration-200">
+                  Check Numbers
+                </Link>
+              </>
             )}
-            <Link to="/games" className="hover:text-yellow-300 transition-colors duration-200">Winners & Good Causes</Link>
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
+                <button
+                  onClick={handlePlayNow}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded font-semibold transition-colors duration-200 flex items-center gap-2"
+                >
+                  <Play size={16} />
+                  PLAY NOW
+                </button>
                 <Link 
                   to="/dashboard"
                   className="flex items-center space-x-2 text-white hover:text-yellow-300 transition-colors duration-200"
@@ -309,19 +358,26 @@ export default function Header() {
               </div>
             ) : (
               <>
+                <button
+                  onClick={handlePlayNow}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded font-semibold transition-colors duration-200 flex items-center gap-2"
+                >
+                  <Play size={16} />
+                  PLAY NOW
+                </button>
                 <Link 
                   to="/register" 
                   className="text-white underline hover:text-yellow-300 transition-colors duration-200"
-                  onClick={() => setMobileOpen(false)}>
+                  onClick={() => setMobileOpen(false)}
+                >
                   Register
                 </Link>
                 <Link 
                   to="/sign-in"
-                  className="text-white underline hover:text-yellow-300 transition-colors duration-200"
-                  onClick={() => setMobileOpen(false)}>
-                  <button className="bg-white text-blue-900 px-6 py-2 rounded font-semibold hover:bg-yellow-300 hover:text-blue-900 transition-colors duration-200">
-                    SIGN IN
-                  </button>
+                  className="bg-white text-blue-900 px-6 py-2 rounded font-semibold hover:bg-yellow-300 hover:text-blue-900 transition-colors duration-200"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  SIGN IN
                 </Link>
               </>
             )}
@@ -335,25 +391,61 @@ export default function Header() {
           </button>
         </div>
 
+        {/* Mobile Menu */}
         {mobileOpen && (
           <div className="md:hidden bg-blue-800 px-4 py-4 space-y-3">
-            <Link to="/" className="block text-white" onClick={() => setMobileOpen(false)}>Home</Link>
-            <button onClick={handleGamesClick} className="block text-white text-left w-full">Games</button>
-            <button onClick={handleResultsClick} className="block text-white text-left w-full">Results</button>
+            <Link to="/" className="block text-white" onClick={() => setMobileOpen(false)}>
+              Home
+            </Link>
+            <button 
+              onClick={() => {
+                setMobileOpen(false);
+                handleGamesClick();
+              }} 
+              className="block text-white text-left w-full"
+            >
+              Games
+            </button>
+            <button 
+              onClick={() => {
+                setMobileOpen(false);
+                handleResultsClick();
+              }} 
+              className="block text-white text-left w-full"
+            >
+              Results
+            </button>
             {isAuthenticated && (
-              <Link to="/dashboard" className="block text-white" onClick={() => setMobileOpen(false)}>My Tickets</Link>
+              <>
+                <Link to="/dashboard" className="block text-white" onClick={() => setMobileOpen(false)}>
+                  My Dashboard
+                </Link>
+                <Link to="/check-numbers" className="block text-white" onClick={() => setMobileOpen(false)}>
+                  Check Numbers
+                </Link>
+              </>
             )}
-            <Link to="/games" className="block text-white" onClick={() => setMobileOpen(false)}>Good Causes</Link>
+            <button onClick={handlePlayNow} className="block text-white text-left w-full">
+              Play Now
+            </button>
             <div className="pt-4 border-t border-blue-700">
               {isAuthenticated ? (
                 <>
-                  <div className="text-white mb-3">Signed in as: {user?.firstName || user?.email}</div>
-                  <button onClick={handleLogout} className="block text-white">Sign Out</button>
+                  <div className="text-white mb-3">
+                    Signed in as: {user?.firstName || user?.email}
+                  </div>
+                  <button onClick={handleLogout} className="block text-white">
+                    Sign Out
+                  </button>
                 </>
               ) : (
                 <>
-                  <Link to="/register" className="block text-white mb-3" onClick={() => setMobileOpen(false)}>Register</Link>
-                  <Link to="/sign-in" className="block text-white" onClick={() => setMobileOpen(false)}>Sign In</Link>
+                  <Link to="/register" className="block text-white mb-3" onClick={() => setMobileOpen(false)}>
+                    Register
+                  </Link>
+                  <Link to="/sign-in" className="block text-white" onClick={() => setMobileOpen(false)}>
+                    Sign In
+                  </Link>
                 </>
               )}
             </div>
@@ -364,7 +456,7 @@ export default function Header() {
       {/* Mega Menus */}
       <div className="relative">
         <GamesMegaMenu isOpen={gamesOpen} onClose={closeAllMenus} />
-        <ResultsMegaMenu isOpen={resultsOpen} onClose={closeAllMenus} />
+        {isAuthenticated && <ResultsMegaMenu isOpen={resultsOpen} onClose={closeAllMenus} />}
       </div>
       
       {/* Overlay to close menus when clicking outside */}

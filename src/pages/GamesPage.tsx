@@ -1,13 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, Clock, PoundSterling, Play, ArrowRight, Star, Target, LogIn } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import Header from "@/components/Header";
 import Footer from '@/components/Footer';
-
-// Mock useAuth hook for demonstration
-const useAuth = () => ({
-  isAuthenticated: false, // Change this to test different states
-  user: null
-});
 
 const games = [
   {
@@ -94,19 +90,33 @@ const games = [
 
 const GamesPage = () => {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const handlePlayGame = (gameId: string) => {
     if (!isAuthenticated) {
-      // In a real app, this would use useNavigate
-      window.location.href = `/sign-in?returnTo=/games/${gameId}/play`;
+      // Store the intended destination and redirect to sign-in
+      sessionStorage.setItem('returnTo', `/games/${gameId}/play`);
+      navigate('/sign-in');
     } else {
-      // Navigate to game play interface
-      window.location.href = `/games/${gameId}/play`;
+      // Navigate directly to game play interface
+      navigate(`/games/${gameId}/play`);
     }
   };
 
   const handleViewDetails = (gameId: string) => {
-    window.location.href = `/games/${gameId}`;
+    navigate(`/games/${gameId}`);
+  };
+
+  const handleSignIn = () => {
+    navigate('/sign-in');
+  };
+
+  const handleRegister = () => {
+    navigate('/register');
+  };
+
+  const handleCheckResults = () => {
+    navigate('/results');
   };
 
   return (
@@ -127,28 +137,28 @@ const GamesPage = () => {
                 <span className="font-medium">Sign in required to play</span>
               </div>
               <div className="flex gap-3 justify-center">
-                <a 
-                  href="/sign-in"
+                <button 
+                  onClick={handleSignIn}
                   className="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition"
                 >
                   Sign In
-                </a>
-                <a 
-                  href="/register"
+                </button>
+                <button 
+                  onClick={handleRegister}
                   className="border-2 border-white text-white px-6 py-2 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
                 >
                   Register
-                </a>
+                </button>
               </div>
             </div>
           )}
           <div className="flex flex-wrap justify-center gap-4">
-            <a 
-              href="/results"
+            <button 
+              onClick={handleCheckResults}
               className="border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
             >
               Check Results
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -160,7 +170,11 @@ const GamesPage = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
             {games.map((game) => (
-              <div key={game.id} className={`rounded-2xl overflow-hidden shadow-2xl ${game.colors.primary}`}>
+              <div 
+                key={game.id} 
+                className={`rounded-2xl overflow-hidden shadow-2xl ${game.colors.primary} cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-3xl`}
+                onClick={() => handlePlayGame(game.id)}
+              >
                 <div className="p-8 text-white">
                   <div className="flex justify-between items-start mb-6">
                     <div>
@@ -226,14 +240,20 @@ const GamesPage = () => {
 
                   <div className="flex gap-4">
                     <button
-                      onClick={() => handlePlayGame(game.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlayGame(game.id);
+                      }}
                       className="flex-1 bg-white text-gray-900 px-6 py-4 rounded-lg font-bold hover:bg-gray-100 transition flex items-center justify-center gap-2"
                     >
                       <Play className="w-5 h-5" />
                       {isAuthenticated ? 'Play Now' : 'Sign In to Play'}
                     </button>
                     <button
-                      onClick={() => handleViewDetails(game.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewDetails(game.id);
+                      }}
                       className="border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition flex items-center justify-center gap-2"
                     >
                       Details
@@ -266,7 +286,11 @@ const GamesPage = () => {
                 </thead>
                 <tbody>
                   {games.map((game, index) => (
-                    <tr key={game.id} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <tr 
+                      key={game.id} 
+                      className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-blue-50 cursor-pointer transition-colors`}
+                      onClick={() => handlePlayGame(game.id)}
+                    >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-4 h-4 rounded-full ${game.colors.primary}`}></div>
@@ -288,12 +312,27 @@ const GamesPage = () => {
                       </td>
                       <td className="px-6 py-4 text-gray-700">{game.drawDays.length}</td>
                       <td className="px-6 py-4">
-                        <button
-                          onClick={() => handleViewDetails(game.id)}
-                          className="text-blue-600 hover:text-blue-800 font-semibold"
-                        >
-                          View Details
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handlePlayGame(game.id);
+                            }}
+                            className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
+                          >
+                            Play
+                          </button>
+                          <span className="text-gray-300">|</span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewDetails(game.id);
+                            }}
+                            className="text-green-600 hover:text-green-800 font-semibold text-sm"
+                          >
+                            Details
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -342,20 +381,20 @@ const GamesPage = () => {
             Join millions of players and support good causes across the UK.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href={isAuthenticated ? "/games/lotto/play" : "/sign-in?returnTo=/games/lotto/play"}
+            <button
+              onClick={() => handlePlayGame('lotto')}
               className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition text-lg"
             >
               <Play className="w-5 h-5" />
-              {isAuthenticated ? 'Play Now' : 'Sign In to Play'}
-            </a>
-            <a
-              href="/register"
+              {isAuthenticated ? 'Play Lotto Now' : 'Sign In to Play'}
+            </button>
+            <button
+              onClick={handleRegister}
               className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
             >
               Create Account
               <ArrowRight className="w-5 h-5" />
-            </a>
+            </button>
           </div>
         </div>
       </section>

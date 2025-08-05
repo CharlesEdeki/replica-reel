@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const HeroSection = () => {
   const [selectedLines, setSelectedLines] = useState(1);
   const [currentRightGame, setCurrentRightGame] = useState(0);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   // Featured games that rotate hourly on the right side
   const featuredGames = [
@@ -88,6 +91,42 @@ const HeroSection = () => {
     setSelectedLines(Math.max(1, Math.min(10, selectedLines + change)));
   };
 
+  const handleQuickLuckyDip = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isAuthenticated) {
+      // Store the intended action and redirect to sign-in
+      sessionStorage.setItem('returnTo', '/games/set-for-life/play');
+      sessionStorage.setItem('luckyDip', 'true');
+      sessionStorage.setItem('selectedLines', selectedLines.toString());
+      navigate('/sign-in');
+    } else {
+      // Store lucky dip preference and navigate to Set For Life game
+      sessionStorage.setItem('luckyDip', 'true');
+      sessionStorage.setItem('selectedLines', selectedLines.toString());
+      navigate('/games/set-for-life/play');
+    }
+  };
+
+  const handleSetForLifePlay = () => {
+    if (!isAuthenticated) {
+      sessionStorage.setItem('returnTo', '/games/set-for-life/play');
+      navigate('/sign-in');
+    } else {
+      navigate('/games/set-for-life/play');
+    }
+  };
+
+  const handleFeaturedGamePlay = () => {
+    if (!isAuthenticated) {
+      sessionStorage.setItem('returnTo', `/games/${currentGame.gameId}/play`);
+      navigate('/sign-in');
+    } else {
+      navigate(`/games/${currentGame.gameId}/play`);
+    }
+  };
+
   return (
     <>
       
@@ -106,8 +145,8 @@ const HeroSection = () => {
         {/* Mobile Layout - Stacked Cards */}
         <div className="md:hidden">
           {/* Set For Life Card */}
-          <Link 
-            to="/games/set-for-life"
+          <div 
+            onClick={handleSetForLifePlay}
             className="relative group cursor-pointer transition-all duration-300 hover:brightness-95 min-h-[400px] block"
           >
             {/* Background with celebration image */}
@@ -154,7 +193,10 @@ const HeroSection = () => {
 
               {/* Bottom section with play button */}
               <div className="flex flex-col gap-4">
-                <Button className="bg-blue-800 hover:bg-blue-900 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <Button 
+                  onClick={handleSetForLifePlay}
+                  className="bg-blue-800 hover:bg-blue-900 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
                   PLAY FOR £1.50
                 </Button>
 
@@ -173,6 +215,7 @@ const HeroSection = () => {
                       <button
                         onClick={(e) => {
                           e.preventDefault();
+                          e.stopPropagation();
                           updateLines(-1);
                         }}
                         className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-blue-500 transition-colors"
@@ -183,6 +226,7 @@ const HeroSection = () => {
                       <button
                         onClick={(e) => {
                           e.preventDefault();
+                          e.stopPropagation();
                           updateLines(1);
                         }}
                         className="w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-blue-500 transition-colors"
@@ -196,7 +240,7 @@ const HeroSection = () => {
                     <span className="text-xs font-bold">Total: £{(selectedLines * 1.50).toFixed(2)}</span>
                     <Button 
                       variant="outline"
-                      onClick={(e) => e.preventDefault()}
+                      onClick={handleQuickLuckyDip}
                       className="text-xs py-1 px-3 border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-bold"
                     >
                       QUICK LUCKY DIP
@@ -205,11 +249,11 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-          </Link>
+          </div>
 
           {/* Featured Game Card */}
-          <Link 
-            to={`/games/${currentGame.gameId}`}
+          <div 
+            onClick={handleFeaturedGamePlay}
             className="relative group cursor-pointer transition-all duration-300 hover:brightness-95 min-h-[300px] mt-4 block"
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${currentGame.bgGradient}`}></div>
@@ -246,24 +290,22 @@ const HeroSection = () => {
 
               {/* Bottom section */}
               <div>
-                <Button className="bg-blue-800 hover:bg-blue-900 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <Button 
+                  onClick={handleFeaturedGamePlay}
+                  className="bg-blue-800 hover:bg-blue-900 text-white font-bold py-3 px-6 rounded-full text-base transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
                   {currentGame.price}
                 </Button>
-                
-                {/* Next game indicator
-                <div className="mt-2 text-xs opacity-75">
-                  <p>Game rotates hourly • Next: {featuredGames[(currentRightGame + 1) % featuredGames.length].subtitle}</p>
-                </div> */}
               </div>
             </div>
-          </Link>
+          </div>
         </div>
 
         {/* Desktop Layout - Side by Side */}
         <div className="hidden md:flex min-h-[500px]">
           {/* Left Side - Set For Life with Full Image Coverage */}
-          <Link 
-            to="/games/set-for-life"
+          <div 
+            onClick={handleSetForLifePlay}
             className="flex-1 relative group cursor-pointer transition-all duration-300 hover:brightness-95 block"
           >
             {/* Background with win.jpg image covering full left side */}
@@ -309,7 +351,10 @@ const HeroSection = () => {
 
               {/* Bottom section with play button */}
               <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl border-2 border-white/20">
+                <Button 
+                  onClick={handleSetForLifePlay}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl border-2 border-white/20"
+                >
                   PLAY FOR £1.50
                 </Button>
 
@@ -328,6 +373,7 @@ const HeroSection = () => {
                       <button
                         onClick={(e) => {
                           e.preventDefault();
+                          e.stopPropagation();
                           updateLines(-1);
                         }}
                         className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-blue-500 transition-colors bg-white"
@@ -338,6 +384,7 @@ const HeroSection = () => {
                       <button
                         onClick={(e) => {
                           e.preventDefault();
+                          e.stopPropagation();
                           updateLines(1);
                         }}
                         className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-blue-500 transition-colors bg-white"
@@ -351,7 +398,7 @@ const HeroSection = () => {
                     <span className="text-sm font-bold text-gray-900">Total: £{(selectedLines * 1.50).toFixed(2)}</span>
                     <Button 
                       variant="outline"
-                      onClick={(e) => e.preventDefault()}
+                      onClick={handleQuickLuckyDip}
                       className="text-sm py-1 px-4 border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-bold bg-white"
                     >
                       QUICK LUCKY DIP
@@ -360,11 +407,11 @@ const HeroSection = () => {
                 </div>
               </div>
             </div>
-          </Link>
+          </div>
 
           {/* Right Side - Featured Game (Rotates Hourly) */}
-          <Link 
-            to={`/games/${currentGame.gameId}`}
+          <div 
+            onClick={handleFeaturedGamePlay}
             className="flex-1 relative group cursor-pointer transition-all duration-300 hover:brightness-95 block"
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${currentGame.bgGradient}`}></div>
@@ -435,17 +482,15 @@ const HeroSection = () => {
 
               {/* Bottom section */}
               <div>
-                <Button className="bg-gradient-to-r from-white/20 to-white/10 hover:from-white/30 hover:to-white/20 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl border-2 border-white/30 backdrop-blur-sm">
+                <Button 
+                  onClick={handleFeaturedGamePlay}
+                  className="bg-gradient-to-r from-white/20 to-white/10 hover:from-white/30 hover:to-white/20 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl border-2 border-white/30 backdrop-blur-sm"
+                >
                   {currentGame.price}
                 </Button>
-                
-                {/* Next game indicator
-                <div className="mt-4 text-xs opacity-75 bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full inline-block">
-                  <p>Game rotates hourly • Next: {featuredGames[(currentRightGame + 1) % featuredGames.length].subtitle}</p>
-                </div> */}
               </div>
             </div>
-          </Link>
+          </div>
         </div>
       </section>
     </>

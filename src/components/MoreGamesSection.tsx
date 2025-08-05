@@ -2,7 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import GameCard from "./GameCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface GameCardData {
   id: string;
@@ -25,6 +26,8 @@ const MoreGamesSection = () => {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   
  const games: GameCardData[] = [
     {
@@ -46,7 +49,7 @@ const MoreGamesSection = () => {
       title: "INSTANT WIN GAMES",
       prize: "£300K",
       description: "Boomin' Lines",
-      subtitle: "Goming for a £300,000 top prize",
+      subtitle: "Going for a £300,000 top prize",
       price: "PLAY FOR £3.00",
       bgGradient: "bg-gradient-to-br from-green-400 via-emerald-500 to-green-600",
       textColor: "text-white",
@@ -106,6 +109,17 @@ const MoreGamesSection = () => {
       gameId: "set-for-life"
     }
   ];
+
+  const handleGameClick = (gameId: string) => {
+    if (!isAuthenticated) {
+      // Store the intended destination and redirect to sign-in
+      sessionStorage.setItem('returnTo', `/games/${gameId}/play`);
+      navigate('/sign-in');
+    } else {
+      // Navigate directly to game play interface
+      navigate(`/games/${gameId}/play`);
+    }
+  };
 
   const checkScrollButtons = () => {
     if (scrollRef.current) {
@@ -201,8 +215,8 @@ const MoreGamesSection = () => {
                 className="flex-shrink-0 w-72 snap-start"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <Link
-                  to={`/games/${game.gameId}`}
+                <div
+                  onClick={() => handleGameClick(game.gameId)}
                   className={`${game.bgGradient} ${game.textColor} rounded-2xl overflow-hidden h-80 relative cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group block`}
                 >
                   {/* Diagonal overlay effect */}
@@ -238,14 +252,20 @@ const MoreGamesSection = () => {
                     </div>
 
                     {/* Play Button */}
-                    <button className={`${game.buttonColor} text-white font-bold py-3 px-6 rounded-full text-sm transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg border-2 border-transparent hover:border-white/20`}>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleGameClick(game.gameId);
+                      }}
+                      className={`${game.buttonColor} text-white font-bold py-3 px-6 rounded-full text-sm transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg border-2 border-transparent hover:border-white/20`}
+                    >
                       {game.price}
                     </button>
                   </div>
 
                   {/* Hover glow effect */}
                   <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-300 rounded-2xl"></div>
-                </Link>
+                </div>
               </div>
             ))}
           </div>
@@ -288,8 +308,8 @@ const MoreGamesSection = () => {
                   className="w-full flex-shrink-0"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <Link
-                    to={`/games/${game.gameId}`}
+                  <div
+                    onClick={() => handleGameClick(game.gameId)}
                     className={`${game.bgGradient} ${game.textColor} rounded-2xl overflow-hidden h-80 relative cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group block`}
                   >
                     {/* Diagonal overlay effect */}
@@ -325,14 +345,20 @@ const MoreGamesSection = () => {
                       </div>
 
                       {/* Play Button */}
-                      <button className={`${game.buttonColor} text-white font-bold py-3 px-6 rounded-full text-sm transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg border-2 border-transparent hover:border-white/20`}>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleGameClick(game.gameId);
+                        }}
+                        className={`${game.buttonColor} text-white font-bold py-3 px-6 rounded-full text-sm transition-all duration-300 transform group-hover:scale-105 group-hover:shadow-lg border-2 border-transparent hover:border-white/20`}
+                      >
                         {game.price}
                       </button>
                     </div>
 
                     {/* Hover glow effect */}
                     <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-300 rounded-2xl"></div>
-                  </Link>
+                  </div>
                 </div>
               ))}
             </div>
@@ -352,22 +378,17 @@ const MoreGamesSection = () => {
               />
             ))}
           </div>
-
-          {/* Auto-play indicator */}
-          {/* <div className="text-center mt-2 text-xs text-gray-500">
-            Auto-sliding every 5 seconds • {currentSlide + 1} of {games.length}
-          </div> */}
         </div>
         
         {/* View All Games Link */}
         <div className="text-center mt-8">
-          <Link
-            to="/games/:gameId"
+          <button
+            onClick={() => navigate('/games')}
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105"
           >
             View All Games
             <ChevronRight className="w-5 h-5" />
-          </Link>
+          </button>
         </div>
       </div>
 

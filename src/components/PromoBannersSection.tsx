@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, Star, Gift, Zap } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const PromoBannersSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const promoOffers = [
     {
@@ -18,7 +22,9 @@ const PromoBannersSection = () => {
       bgImage: "bg-gradient-to-r from-purple-600 via-pink-500 to-red-500",
       textColor: "text-white",
       icon: <Zap className="h-6 w-6" />,
-      description: "Word puzzle scratchcard with cash prizes"
+      description: "Word puzzle scratchcard with cash prizes",
+      gameId: "cashword-extra", // Add game ID for routing
+      category: "instant-win"
     },
     {
       id: 2,
@@ -32,7 +38,9 @@ const PromoBannersSection = () => {
       textColor: "text-white",
       icon: <Gift className="h-6 w-6" />,
       description: "Online only. Week ends 11pm Sunday. 14 days to accept prize.",
-      terms: "Promo Ts&Cs apply."
+      terms: "Promo Ts&Cs apply.",
+      gameId: "weekly-prize", // Special promo, route to games page
+      category: "promotion"
     },
     {
       id: 3,
@@ -45,9 +53,34 @@ const PromoBannersSection = () => {
       bgImage: "bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600",
       textColor: "text-white", 
       icon: <Star className="h-6 w-6" />,
-      description: "Limited time offer for registered players"
+      description: "Limited time offer for registered players",
+      gameId: "lotto", // Route to Lotto game
+      category: "game"
     }
   ];
+
+  const handleOfferClick = (offer: typeof promoOffers[0]) => {
+    if (offer.category === "game") {
+      // Navigate to specific game
+      if (!isAuthenticated) {
+        sessionStorage.setItem('returnTo', `/games/${offer.gameId}/play`);
+        navigate('/sign-in');
+      } else {
+        navigate(`/games/${offer.gameId}/play`);
+      }
+    } else if (offer.category === "promotion") {
+      // Navigate to games page for promotions
+      navigate('/games');
+    } else if (offer.category === "instant-win") {
+      // Navigate to instant win games section or specific instant game
+      navigate('/games'); // You can change this to a specific instant games page if you have one
+    }
+  };
+
+  const handleButtonClick = (e: React.MouseEvent, offer: typeof promoOffers[0]) => {
+    e.stopPropagation(); // Prevent card click
+    handleOfferClick(offer);
+  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % promoOffers.length);
@@ -66,6 +99,7 @@ const PromoBannersSection = () => {
             <Card 
               key={offer.id} 
               className={`${offer.bgImage} ${offer.textColor} border-0 overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer group`}
+              onClick={() => handleOfferClick(offer)}
             >
               <CardContent className="p-6 h-full flex flex-col relative min-h-[280px]">
                 {/* Background Pattern */}
@@ -114,8 +148,14 @@ const PromoBannersSection = () => {
                   <Button 
                     className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 font-bold transition-all duration-300 transform hover:scale-105 mt-auto"
                     variant="outline"
+                    onClick={(e) => handleButtonClick(e, offer)}
                   >
-                    {offer.price ? `Play Now for ${offer.price}` : 'Learn More'}
+                    {offer.price && isAuthenticated 
+                      ? `Play Now for ${offer.price}` 
+                      : offer.price && !isAuthenticated
+                      ? 'Sign In to Play'
+                      : 'Learn More'
+                    }
                   </Button>
                 </div>
               </CardContent>
@@ -158,7 +198,8 @@ const PromoBannersSection = () => {
                 {promoOffers.map((offer) => (
                   <div key={offer.id} className="w-full flex-shrink-0">
                     <Card 
-                      className={`${offer.bgImage} ${offer.textColor} border-0 overflow-hidden min-h-[350px]`}
+                      className={`${offer.bgImage} ${offer.textColor} border-0 overflow-hidden min-h-[350px] cursor-pointer`}
+                      onClick={() => handleOfferClick(offer)}
                     >
                       <CardContent className="p-6 min-h-[350px] flex flex-col">
                         {/* Header */}
@@ -202,8 +243,14 @@ const PromoBannersSection = () => {
                         <Button 
                           className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30 hover:border-white/50 font-bold transition-all duration-300"
                           variant="outline"
+                          onClick={(e) => handleButtonClick(e, offer)}
                         >
-                          {offer.price ? `Play Now for ${offer.price}` : 'Learn More'}
+                          {offer.price && isAuthenticated 
+                            ? `Play Now for ${offer.price}` 
+                            : offer.price && !isAuthenticated
+                            ? 'Sign In to Play'
+                            : 'Learn More'
+                          }
                         </Button>
                       </CardContent>
                     </Card>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CountdownTimerProps {
   targetDate: Date;
@@ -82,7 +83,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, gameName, c
   );
 };
 
-// Enhanced GameCard with improved animations
+// Enhanced GameCard with improved animations and proper navigation
 interface EnhancedGameCardProps {
   game: string;
   title: string;
@@ -112,6 +113,8 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, vx: number, vy: number}>>([]);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   // Generate particles on hover
   useEffect(() => {
@@ -146,12 +149,29 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
     return () => clearInterval(interval);
   }, [particles]);
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      // Store the intended destination and redirect to sign-in
+      sessionStorage.setItem('returnTo', `/games/${gameId}/play`);
+      navigate('/sign-in');
+    } else {
+      // Navigate directly to game play interface
+      navigate(`/games/${gameId}/play`);
+    }
+  };
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    handleCardClick(e);
+  };
+
   return (
-    <Link
-      to={`/games/${gameId}`}
-      className={`${backgroundColor} ${textColor} rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer group relative h-full min-h-[400px] block`}
+    <div
+      className={`${backgroundColor} ${textColor} rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer group relative h-full min-h-[400px]`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
     >
       {/* Particle effects */}
       {particles.map(particle => (
@@ -197,14 +217,17 @@ const EnhancedGameCard: React.FC<EnhancedGameCardProps> = ({
         </div>
         
         {/* Play button */}
-        <button className="w-full bg-white/20 hover:bg-white/40 text-white border border-white/30 hover:border-white/50 font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-          {buttonText} {buttonPrice && <span className="ml-1">{buttonPrice}</span>}
+        <button 
+          onClick={handleButtonClick}
+          className="w-full bg-white/20 hover:bg-white/40 text-white border border-white/30 hover:border-white/50 font-bold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+        >
+          {isAuthenticated ? buttonText : 'Sign In to Play'} {buttonPrice && isAuthenticated && <span className="ml-1">{buttonPrice}</span>}
         </button>
       </div>
 
       {/* Shadow effect */}
       <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
-    </Link>
+    </div>
   );
 };
 
@@ -408,11 +431,6 @@ const EnhancedGamesShowcase = () => {
               />
             ))}
           </div>
-
-          {/* Auto-play indicator
-          <div className="text-center mt-2 text-xs text-gray-500">
-            Auto-sliding every 5 seconds • {currentSlide + 1} of {games.length}
-          </div> */}
         </div>
       </div>
     </div>

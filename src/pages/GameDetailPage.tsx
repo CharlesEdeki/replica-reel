@@ -56,7 +56,7 @@ const GamesPage = () => {
                   </div>
                 </div>
                 <Link
-                  to="/games/lotto"
+                  to="/games/lotto/play"
                   className="inline-flex items-center gap-2 bg-white text-red-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition"
                 >
                   <Play className="w-5 h-5" />
@@ -121,19 +121,19 @@ const GamesPage = () => {
                   
                   <div className="space-y-3">
                     <Link
-                      to={`/games/${game.id}`}
+                      to={`/games/${game.id}/play`}
                       className={`w-full flex items-center justify-center gap-2 ${game.colors.primary} text-white py-3 px-4 rounded-lg font-semibold hover:opacity-90 transition`}
                     >
                       <Play className="w-4 h-4" />
                       Play Now
                     </Link>
-                    <Link
-                      to={`/games/${game.id}`}
+                    {/* <Link
+                      to={`/games/${game.id}/play`}
                       className="w-full flex items-center justify-center gap-2 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-50 transition"
                     >
                       Learn More
                       <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </div>

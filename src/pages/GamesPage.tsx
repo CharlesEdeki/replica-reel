@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Clock, PoundSterling, Play, ArrowRight, Star, Target, LogIn } from 'lucide-react';
+import { Calendar, Clock, Play, ArrowRight, Star, Target, LogIn } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from "@/components/Header";
 import Footer from '@/components/Footer';
@@ -8,11 +8,11 @@ import Footer from '@/components/Footer';
 const games = [
   {
     id: 'lotto',
-    name: 'Lotto',
-    tagline: 'The UK\'s favourite lottery',
-    description: 'Play Lotto for your chance to win life-changing jackpots starting from £2 million. With draws twice a week, you have plenty of chances to become a millionaire.',
-    ticketPrice: 2.00,
-    minJackpot: '£2M+',
+    name: 'Naija Lotto',
+    tagline: 'The hottest lottery for Nigerians',
+    description: 'Play Naija Lotto for your chance to win life-changing money starting from ₦1M. With draws twice a week, you get plenty chances to become a millionaire! E go sweet you!',
+    ticketPrice: 100.00,
+    minJackpot: '₦1M+',
     maxNumbers: 6,
     numberRange: '1-59',
     drawDays: ['Wednesday', 'Saturday'],
@@ -28,11 +28,11 @@ const games = [
   },
   {
     id: 'euromillions',
-    name: 'EuroMillions',
-    tagline: 'Europe\'s biggest lottery',
-    description: 'EuroMillions offers some of the biggest jackpots in the world. Play across 9 European countries for prizes that can change your life forever.',
-    ticketPrice: 2.50,
-    minJackpot: '£14M+',
+    name: 'AfroMillions',
+    tagline: 'Africa\'s biggest lottery',
+    description: 'AfroMillions offers some of the biggest jackpots in Africa. Play across multiple countries for prizes that go change your life forever! Na serious money we dey talk!',
+    ticketPrice: 125.00,
+    minJackpot: '₦7M+',
     maxNumbers: 5,
     numberRange: '1-50',
     drawDays: ['Tuesday', 'Friday'],
@@ -48,11 +48,11 @@ const games = [
   },
   {
     id: 'thunderball',
-    name: 'Thunderball',
-    tagline: 'Play for £500,000',
-    description: 'Thunderball offers a top prize of £500,000 and better odds of winning. With four draws each week, you have more chances to win.',
-    ticketPrice: 1.00,
-    minJackpot: '£500K',
+    name: 'Thunder Strike',
+    tagline: 'Strike for ₦25M',
+    description: 'Thunder Strike offers a top prize of ₦25M and better odds of winning. With four draws each week, you get more chances to win big money! Thunder go strike for you!',
+    ticketPrice: 50.00,
+    minJackpot: '₦25M',
     maxNumbers: 5,
     numberRange: '1-39',
     drawDays: ['Tuesday', 'Wednesday', 'Friday', 'Saturday'],
@@ -68,11 +68,11 @@ const games = [
   },
   {
     id: 'set-for-life',
-    name: 'Set For Life',
-    tagline: 'Win £10,000 every month for 30 years',
-    description: 'Set For Life offers a unique prize structure. Win the top prize and receive £10,000 every month for 30 years - that\'s £3.6 million in total!',
-    ticketPrice: 1.50,
-    minJackpot: '£10K/month',
+    name: 'Set For Life Naija',
+    tagline: 'Win ₦500K every month for 30 years',
+    description: 'Set For Life Naija offers a unique prize structure. Win the top prize and receive ₦500K every month for 30 years - that\'s ₦180M in total! You go set for life true true!',
+    ticketPrice: 75.00,
+    minJackpot: '₦500K/month',
     maxNumbers: 5,
     numberRange: '1-47',
     drawDays: ['Monday', 'Thursday'],
@@ -125,16 +125,16 @@ const GamesPage = () => {
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-teal-500 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">Choose Your Lottery Game</h1>
+          <h1 className="text-5xl font-bold mb-6">Choose Your Game Make You Win Big! 🎲</h1>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-            From life-changing jackpots to fixed prizes, find the perfect lottery game for you. 
-            Play responsibly and good luck!
+            From life-changing jackpots to sweet prizes, find the perfect lottery game wey fit make you rich! 
+            Play responsibly and good luck! Make money dey enter your pocket! 💰
           </p>
           {!isAuthenticated && (
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 max-w-md mx-auto mb-8">
               <div className="flex items-center gap-3 text-white/90 mb-4">
                 <LogIn className="w-5 h-5" />
-                <span className="font-medium">Sign in required to play</span>
+                <span className="font-medium">You need sign in first before you fit play o!</span>
               </div>
               <div className="flex gap-3 justify-center">
                 <button 
@@ -157,120 +157,16 @@ const GamesPage = () => {
               onClick={handleCheckResults}
               className="border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
             >
-              Check Results
+              Check Results See If You Win! 👀
             </button>
           </div>
         </div>
       </section>
 
-      {/* Games Grid */}
+      {/* Games Comparison */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Available Lottery Games</h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {games.map((game) => (
-              <div 
-                key={game.id} 
-                className={`rounded-2xl overflow-hidden shadow-2xl ${game.colors.primary} cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-3xl`}
-                onClick={() => handlePlayGame(game.id)}
-              >
-                <div className="p-8 text-white">
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <h3 className="text-3xl font-bold mb-2">{game.name}</h3>
-                      <p className="text-white/90 text-lg">{game.tagline}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold">£{game.ticketPrice.toFixed(2)}</div>
-                      <div className="text-white/80 text-sm">per line</div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-white/90 mb-6 leading-relaxed">
-                    {game.description}
-                  </p>
-                  
-                  <div className="grid grid-cols-2 gap-6 mb-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Calendar className="w-4 h-4" />
-                        <span className="text-sm font-medium">Draw Days</span>
-                      </div>
-                      <div className="text-white/90">
-                        {game.drawDays.join(', ')}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Clock className="w-4 h-4" />
-                        <span className="text-sm font-medium">Draw Time</span>
-                      </div>
-                      <div className="text-white/90">{game.drawTime}</div>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <PoundSterling className="w-4 h-4" />
-                        <span className="text-sm font-medium">Min Jackpot</span>
-                      </div>
-                      <div className="text-white/90 font-bold">{game.minJackpot}</div>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Target className="w-4 h-4" />
-                        <span className="text-sm font-medium">Numbers</span>
-                      </div>
-                      <div className="text-white/90">
-                        {game.maxNumbers} from {game.numberRange}
-                      </div>
-                    </div>
-                  </div>
-
-                  {game.bonusNumbers && (
-                    <div className="bg-white/10 rounded-lg p-4 mb-6">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Star className="w-4 h-4" />
-                        <span className="font-medium">{game.bonusNumbers.name}</span>
-                      </div>
-                      <div className="text-white/90">
-                        {game.bonusNumbers.count} number{game.bonusNumbers.count > 1 ? 's' : ''} from {game.bonusNumbers.range}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex gap-4">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePlayGame(game.id);
-                      }}
-                      className="flex-1 bg-white text-gray-900 px-6 py-4 rounded-lg font-bold hover:bg-gray-100 transition flex items-center justify-center gap-2"
-                    >
-                      <Play className="w-5 h-5" />
-                      {isAuthenticated ? 'Play Now' : 'Sign In to Play'}
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewDetails(game.id);
-                      }}
-                      className="border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition flex items-center justify-center gap-2"
-                    >
-                      Details
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Game Comparison */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Compare Games</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Compare Games See Which One Sweet Pass! 📊</h2>
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -300,7 +196,7 @@ const GamesPage = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 font-semibold text-gray-900">£{game.ticketPrice.toFixed(2)}</td>
+                      <td className="px-6 py-4 font-semibold text-gray-900">₦{game.ticketPrice.toLocaleString()}</td>
                       <td className="px-6 py-4 font-semibold text-gray-900">{game.minJackpot}</td>
                       <td className="px-6 py-4 text-gray-700">
                         {game.maxNumbers} from {game.numberRange}
@@ -320,7 +216,7 @@ const GamesPage = () => {
                             }}
                             className="text-blue-600 hover:text-blue-800 font-semibold text-sm"
                           >
-                            Play
+                            Play Am! 🎮
                           </button>
                           <span className="text-gray-300">|</span>
                           <button
@@ -343,31 +239,135 @@ const GamesPage = () => {
         </div>
       </section>
 
+      {/* Game Grid */}
+      <section className="py-16 bg-gray-50">
+              <div className="max-w-7xl mx-auto px-4">
+                <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Available Lottery Games Wey Go Make You Rich! 💸</h2>
+                
+                <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+                  {games.map((game) => (
+                    <div 
+                      key={game.id} 
+                      className={`rounded-2xl overflow-hidden shadow-2xl ${game.colors.primary} cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-3xl`}
+                      onClick={() => handlePlayGame(game.id)}
+                    >
+                      <div className="p-8 text-white">
+                        <div className="flex justify-between items-start mb-6">
+                          <div>
+                            <h3 className="text-3xl font-bold mb-2">{game.name}</h3>
+                            <p className="text-white/90 text-lg">{game.tagline}</p>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-2xl font-bold">₦{game.ticketPrice.toLocaleString()}</div>
+                            <div className="text-white/80 text-sm">per line</div>
+                          </div>
+                        </div>
+                        
+                        <p className="text-white/90 mb-6 leading-relaxed">
+                          {game.description}
+                        </p>
+                        
+                        <div className="grid grid-cols-2 gap-6 mb-6">
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Calendar className="w-4 h-4" />
+                              <span className="text-sm font-medium">Draw Days</span>
+                            </div>
+                            <div className="text-white/90">
+                              {game.drawDays.join(', ')}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Clock className="w-4 h-4" />
+                              <span className="text-sm font-medium">Draw Time</span>
+                            </div>
+                            <div className="text-white/90">{game.drawTime}</div>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              {/* <PoundSterling className="w-4 h-4" /> */}
+                              <span className="text-sm font-medium">Min Jackpot</span>
+                            </div>
+                            <div className="text-white/90 font-bold">{game.minJackpot}</div>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Target className="w-4 h-4" />
+                              <span className="text-sm font-medium">Numbers</span>
+                            </div>
+                            <div className="text-white/90">
+                              {game.maxNumbers} from {game.numberRange}
+                            </div>
+                          </div>
+                        </div>
+      
+                        {game.bonusNumbers && (
+                          <div className="bg-white/10 rounded-lg p-4 mb-6">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Star className="w-4 h-4" />
+                              <span className="font-medium">{game.bonusNumbers.name}</span>
+                            </div>
+                            <div className="text-white/90">
+                              {game.bonusNumbers.count} number{game.bonusNumbers.count > 1 ? 's' : ''} from {game.bonusNumbers.range}
+                            </div>
+                          </div>
+                        )}
+      
+                        <div className="flex gap-4">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handlePlayGame(game.id);
+                            }}
+                            className="flex-1 bg-white text-gray-900 px-6 py-4 rounded-lg font-bold hover:bg-gray-100 transition flex items-center justify-center gap-2"
+                          >
+                            <Play className="w-5 h-5" />
+                            {isAuthenticated ? 'Play Now Make Money! 🚀' : 'Sign In to Play'}
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewDetails(game.id);
+                            }}
+                            className="border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition flex items-center justify-center gap-2"
+                          >
+                            Details
+                            <ArrowRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
       {/* How to Play Section */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">How to Play</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">How to Play and Win Big Money! 💰</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-lg p-6 shadow-lg">
               <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-blue-600 font-bold text-xl">1</span>
               </div>
               <h3 className="text-xl font-semibold mb-3">Choose Your Game</h3>
-              <p className="text-gray-600">Select from our range of lottery games, each with different jackpots and odds.</p>
+              <p className="text-gray-600">Pick from our sweet lottery games, each one get different jackpots and chances to win big!</p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-lg">
               <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-purple-600 font-bold text-xl">2</span>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Pick Your Numbers</h3>
-              <p className="text-gray-600">Choose your lucky numbers or let our Lucky Dip feature select them for you.</p>
+              <h3 className="text-xl font-semibold mb-3">Pick Your Lucky Numbers</h3>
+              <p className="text-gray-600">Choose your lucky numbers or let our Lucky Dip feature select them for you. Na your choice!</p>
             </div>
             <div className="bg-white rounded-lg p-6 shadow-lg">
               <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-green-600 font-bold text-xl">3</span>
               </div>
               <h3 className="text-xl font-semibold mb-3">Check Results</h3>
-              <p className="text-gray-600">Watch the draw live or check your dashboard to see if you've won!</p>
+              <p className="text-gray-600">Watch the draw live or check your dashboard to see if you don win big money! E go sweet you!</p>
             </div>
           </div>
         </div>
@@ -376,9 +376,9 @@ const GamesPage = () => {
       {/* Call to Action */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Playing?</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Playing and Win Big? 🚀</h2>
           <p className="text-xl text-white/90 mb-8">
-            Join millions of players and support good causes across the UK.
+            Join millions of players and support good causes across Nigeria. Make your money work for you!
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <button
@@ -386,13 +386,13 @@ const GamesPage = () => {
               className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition text-lg"
             >
               <Play className="w-5 h-5" />
-              {isAuthenticated ? 'Play Lotto Now' : 'Sign In to Play'}
+              {isAuthenticated ? 'Play Naija Lotto Now! 🎲' : 'Sign In to Play'}
             </button>
             <button
               onClick={handleRegister}
               className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
             >
-              Create Account
+              Create Account Make You Win! 💸
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>

@@ -56,7 +56,7 @@ const DashboardPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error loading tickets:', error);
-      toast.error('Failed to load your tickets');
+      toast.error('Wahala don happen! We no fit load your tickets');
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ const DashboardPage: React.FC = () => {
 
     // Simple random win/lose simulation (10% chance to win something)
     const isWinner = Math.random() < 0.1;
-    const winAmount = isWinner ? Math.floor(Math.random() * 1000) + 10 : 0;
+    const winAmount = isWinner ? Math.floor(Math.random() * 50000) + 500 : 0;
 
     const updatedTicket = {
       ...ticket,
@@ -97,9 +97,9 @@ const DashboardPage: React.FC = () => {
       localStorage.setItem('lotteryTickets', JSON.stringify(updatedTickets));
 
       if (isWinner) {
-        toast.success(`🎉 Congratulations! You won £${winAmount} on your ${ticket.gameName} ticket!`);
+        toast.success(`🎉 Omo! You don win! ₦${winAmount.toLocaleString()} for your ${ticket.gameName} ticket! E choke!`);
       } else {
-        toast.info(`Your ${ticket.gameName} ticket didn't win this time. Better luck next time!`);
+        toast.info(`Your ${ticket.gameName} ticket no enter this time. No wahala, better luck next time! Keep trying!`);
       }
     } catch (error) {
       console.error('Error updating ticket:', error);
@@ -112,21 +112,21 @@ const DashboardPage: React.FC = () => {
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
             <Clock className="w-3 h-3" />
-            Awaiting Draw
+            Dey Wait for Draw
           </span>
         );
       case 'won':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <Trophy className="w-3 h-3" />
-            Won £{winAmount}
+            You Win ₦{winAmount?.toLocaleString()}! 🔥
           </span>
         );
       case 'lost':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
             <AlertCircle className="w-3 h-3" />
-            No Win
+            No Win This Time
           </span>
         );
       default:
@@ -135,7 +135,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
+    return new Date(dateString).toLocaleDateString('en-NG', {
       weekday: 'short',
       year: 'numeric',
       month: 'short',
@@ -144,7 +144,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('en-GB', {
+    return new Date(dateString).toLocaleTimeString('en-NG', {
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -167,7 +167,7 @@ const DashboardPage: React.FC = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <p className="text-gray-600">Dey load your dashboard...</p>
         </div>
       </div>
     );
@@ -182,9 +182,9 @@ const DashboardPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome back, {user?.firstName || user?.email}!
+              Wetin dey happen, {user?.firstName || user?.email}! 👋
             </h1>
-            <p className="text-gray-600">Track your lottery tickets and check your results</p>
+            <p className="text-gray-600">Check your lottery tickets and see if you don win something sweet!</p>
           </div>
           <div className="flex gap-2 mt-4 sm:mt-0">
             <Link
@@ -192,14 +192,14 @@ const DashboardPage: React.FC = () => {
               className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
             >
               <Play className="w-4 h-4" />
-              Play Now
+              Make Some Money! 🚀
             </Link>
             <button
               onClick={logout}
               className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
             >
               <LogOut className="w-4 h-4" />
-              Sign Out
+              Comot
             </button>
           </div>
         </div>
@@ -219,8 +219,8 @@ const DashboardPage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Spent</p>
-                <p className="text-2xl font-bold text-gray-900">£{getTotalSpent().toFixed(2)}</p>
+                <p className="text-sm font-medium text-gray-600">Money Wey You Spend</p>
+                <p className="text-2xl font-bold text-gray-900">₦{getTotalSpent().toLocaleString()}</p>
               </div>
               <CreditCard className="w-8 h-8 text-gray-600" />
             </div>
@@ -229,7 +229,7 @@ const DashboardPage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Wins</p>
+                <p className="text-sm font-medium text-gray-600">Your Wins 🏆</p>
                 <p className="text-2xl font-bold text-green-600">{getWinCount()}</p>
               </div>
               <Trophy className="w-8 h-8 text-green-600" />
@@ -239,8 +239,8 @@ const DashboardPage: React.FC = () => {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Winnings</p>
-                <p className="text-2xl font-bold text-green-600">£{getTotalWinnings().toFixed(2)}</p>
+                <p className="text-sm font-medium text-gray-600">Money Wey You Win</p>
+                <p className="text-2xl font-bold text-green-600">₦{getTotalWinnings().toLocaleString()}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-green-600" />
             </div>
@@ -250,13 +250,13 @@ const DashboardPage: React.FC = () => {
         {/* Your Tickets */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Your Tickets</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Your Tickets Dem</h2>
             {tickets.length > 0 && (
               <Link
                 to="/games"
                 className="text-blue-600 hover:text-blue-700 font-medium"
               >
-                Buy More Tickets →
+                Buy More Tickets Make You Win Big! →
               </Link>
             )}
           </div>
@@ -264,14 +264,14 @@ const DashboardPage: React.FC = () => {
           {tickets.length === 0 ? (
             <div className="text-center py-12">
               <Ticket className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No tickets yet</h3>
-              <p className="text-gray-500 mb-6">Start playing by purchasing your first lottery ticket!</p>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">You never buy ticket yet o!</h3>
+              <p className="text-gray-500 mb-6">Start to dey play by buying your first lottery ticket! Na small money wey fit turn big money!</p>
               <Link
                 to="/games"
                 className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
               >
                 <Play className="w-4 h-4" />
-                Play Your First Game
+                Play Your First Game! 🎲
               </Link>
             </div>
           ) : (
@@ -292,15 +292,15 @@ const DashboardPage: React.FC = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600 mb-3">
                           <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
-                            <span>Purchased: {formatDate(ticket.purchaseDate)}</span>
+                            <span>You Buy: {formatDate(ticket.purchaseDate)}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
-                            <span>Draw: {formatDate(ticket.drawDate)}</span>
+                            <span>Draw Date: {formatDate(ticket.drawDate)}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <CreditCard className="w-4 h-4" />
-                            <span>Cost: £{ticket.ticketPrice}</span>
+                            <span>Cost: ₦{ticket.ticketPrice.toLocaleString()}</span>
                           </div>
                         </div>
 
@@ -346,7 +346,7 @@ const DashboardPage: React.FC = () => {
                             className="flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition text-sm"
                           >
                             <Eye className="w-4 h-4" />
-                            Check Result
+                            Check Am! 👀
                           </button>
                         )}
                         <Link
@@ -373,7 +373,7 @@ const DashboardPage: React.FC = () => {
           >
             <Play className="w-8 h-8 mb-3" />
             <h3 className="text-lg font-semibold mb-2">Play Games</h3>
-            <p className="text-blue-100">Choose your lucky numbers and buy tickets</p>
+            <p className="text-blue-100">Pick your lucky numbers and buy tickets wey go make you rich! 💰</p>
           </Link>
 
           <Link
@@ -382,7 +382,7 @@ const DashboardPage: React.FC = () => {
           >
             <Trophy className="w-8 h-8 mb-3" />
             <h3 className="text-lg font-semibold mb-2">Latest Results</h3>
-            <p className="text-purple-100">Check the latest draw results</p>
+            <p className="text-purple-100">Check the latest draw results - see who don win big! 🏆</p>
           </Link>
 
           <Link
@@ -391,7 +391,7 @@ const DashboardPage: React.FC = () => {
           >
             <Target className="w-8 h-8 mb-3" />
             <h3 className="text-lg font-semibold mb-2">Check Numbers</h3>
-            <p className="text-green-100">Verify your tickets against results</p>
+            <p className="text-green-100">See if your numbers don win something sweet! 🎯</p>
           </Link>
         </div>
       </div>

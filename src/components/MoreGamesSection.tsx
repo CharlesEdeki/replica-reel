@@ -31,52 +31,52 @@ const MoreGamesSection = () => {
   
  const games: GameCardData[] = [
     {
-      id: "euromillions",
+      id: "afromillions",
       label: "This Tuesday",
-      title: "EUROMILLIONS",
-      prize: "£157M",
+      title: "AFROMILLIONS",
+      prize: "₦157M",
       description: "JACKPOT",
       subtitle: "GET THAT EUROMILLIONS FEELING",
-      price: "PLAY FOR £2.50",
+      price: "PLAY FOR ₦2.50",
       bgGradient: "bg-gradient-to-br from-yellow-400 via-orange-400 to-orange-600",
       textColor: "text-white",
       buttonColor: "bg-blue-800 hover:bg-blue-900",
-      gameId: "euromillions"
+      gameId: "afromillions"
     },
     {
       id: "instant-win",
       label: "Featured game",
       title: "INSTANT WIN GAMES",
-      prize: "£300K",
+      prize: "₦300K",
       description: "Boomin' Lines",
       subtitle: "Going for a £300,000 top prize",
-      price: "PLAY FOR £3.00",
+      price: "PLAY FOR ₦3.00",
       bgGradient: "bg-gradient-to-br from-green-400 via-emerald-500 to-green-600",
       textColor: "text-white",
       buttonColor: "bg-blue-800 hover:bg-blue-900",
       gameId: "instant-win"
     },
     {
-      id: "euromillions-hotpicks",
+      id: "afromillions-hotpicks",
       label: "This Tuesday",
-      title: "EUROMILLIONS HOTPICKS",
-      prize: "£1500",
+      title: "AFROMILLIONS HOTPICKS",
+      prize: "₦1500",
       description: "Pick & match 3 balls, win",
       subtitle: "",
-      price: "PLAY FOR £1.50",
+      price: "PLAY FOR ₦1.50",
       bgGradient: "bg-gradient-to-br from-orange-400 via-red-400 to-red-500",
       textColor: "text-white",
       buttonColor: "bg-blue-800 hover:bg-blue-900",
-      gameId: "euromillions-hotpicks"
+      gameId: "afromillions-hotpicks"
     },
     {
       id: "lotto",
       label: "Today",
       title: "LOTTO",
-      prize: "£5.2M",
+      prize: "₦5.2M",
       description: "IT'S A ROLLOVER",
       subtitle: "Triple rollover jackpot",
-      price: "PLAY FOR £2.00",
+      price: "PLAY FOR ₦2.00",
       bgGradient: "bg-gradient-to-br from-pink-400 via-pink-500 to-purple-600",
       textColor: "text-white",
       buttonColor: "bg-blue-800 hover:bg-blue-900",
@@ -86,10 +86,10 @@ const MoreGamesSection = () => {
       id: "thunderball",
       label: "This Friday",
       title: "THUNDERBALL",
-      prize: "£500K",
+      prize: "₦500K",
       description: "TOP PRIZE",
-      subtitle: "£1 could win you £500,000",
-      price: "PLAY FOR £1.00",
+      subtitle: "₦1 could win you ₦500,000",
+      price: "PLAY FOR ₦1.00",
       bgGradient: "bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-600",
       textColor: "text-white",
       buttonColor: "bg-blue-800 hover:bg-blue-900",
@@ -99,10 +99,10 @@ const MoreGamesSection = () => {
       id: "set-for-life",
       label: "Monday & Thursday",
       title: "SET FOR LIFE",
-      prize: "£10,000",
+      prize: "₦10,000",
       description: "every month for 30 years",
       subtitle: "Life-changing prizes",
-      price: "PLAY FOR £1.50",
+      price: "PLAY FOR ₦1.50",
       bgGradient: "bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-500",
       textColor: "text-white",
       buttonColor: "bg-blue-800 hover:bg-blue-900",
@@ -231,8 +231,8 @@ const MoreGamesSection = () => {
                       </div>
                       <h3 className="text-xl font-black mb-2 leading-tight">
                         {game.title}
-                        {game.title === "EUROMILLIONS" && <span className="text-lg">®</span>}
-                        {game.title === "EUROMILLIONS HOTPICKS" && <span className="text-lg">®</span>}
+                        {game.title === "AFROMILLIONS" && <span className="text-lg">®</span>}
+                        {game.title === "AFROMILLIONS HOTPICKS" && <span className="text-lg">®</span>}
                       </h3>
                     </div>
 

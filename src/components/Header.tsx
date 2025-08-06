@@ -12,7 +12,7 @@ function GamesMegaMenu({ isOpen, onClose }) {
     {
       title: "This Wednesday",
       subtitle: "LOTTO",
-      amount: "£5.3M",
+      amount: "₦5.3M",
       color: "bg-gradient-to-br from-red-500 to-red-600",
       textColor: "text-white",
       gameId: "lotto"
@@ -20,7 +20,7 @@ function GamesMegaMenu({ isOpen, onClose }) {
     {
       title: "This Tuesday", 
       subtitle: "EUROMILLIONS",
-      amount: "£157M",
+      amount: "₦157M",
       color: "bg-gradient-to-br from-orange-400 to-orange-500",
       textColor: "text-white",
       gameId: "euromillions"
@@ -28,7 +28,7 @@ function GamesMegaMenu({ isOpen, onClose }) {
     {
       title: "This Monday",
       subtitle: "SET FOR LIFE",
-      amount: "WIN £10,000",
+      amount: "WIN ₦10,000",
       subAmount: "EVERY MONTH",
       extraText: "FOR 30 YEARS",
       color: "bg-gradient-to-br from-cyan-400 to-cyan-500",
@@ -41,7 +41,7 @@ function GamesMegaMenu({ isOpen, onClose }) {
     {
       title: "This Wednesday",
       subtitle: "LOTTO HOTPICKS",
-      amount: "£350K",
+      amount: "₦350K",
       color: "bg-gradient-to-br from-red-500 to-red-600",
       textColor: "text-white",
       gameId: "lotto-hotpicks"
@@ -49,7 +49,7 @@ function GamesMegaMenu({ isOpen, onClose }) {
     {
       title: "This Tuesday",
       subtitle: "EUROMILLIONS HOTPICKS", 
-      amount: "£1M",
+      amount: "₦1M",
       color: "bg-gradient-to-br from-orange-500 to-orange-600",
       textColor: "text-white",
       gameId: "euromillions-hotpicks"
@@ -57,7 +57,7 @@ function GamesMegaMenu({ isOpen, onClose }) {
     {
       title: "This Tuesday",
       subtitle: "THUNDERBALL",
-      amount: "£500K",
+      amount: "₦500K",
       color: "bg-gradient-to-br from-purple-500 to-purple-600",
       textColor: "text-white",
       gameId: "thunderball"

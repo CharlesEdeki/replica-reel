@@ -15,30 +15,30 @@ const PromoBannersSection = () => {
       id: 1,
       type: "Instant Win",
       title: "Cashword Extra",
-      subtitle: "Cash in on the game with a",
-      prize: "£50,000",
-      prizeLabel: "top prize",
-      price: "£2.00",
+      subtitle: "Cash in sharp sharp on the game with a",
+      prize: "₦50,000,000",
+      prizeLabel: "top prize wey go sweet you!",
+      price: "₦2,000",
       bgImage: "bg-gradient-to-r from-purple-600 via-pink-500 to-red-500",
       textColor: "text-white",
       icon: <Zap className="h-6 w-6" />,
-      description: "Word puzzle scratchcard with cash prizes",
+      description: "Word puzzle scratchcard with cash prizes wey go change your life",
       gameId: "cashword-extra", // Add game ID for routing
       category: "instant-win"
     },
     {
       id: 2,
       type: "Weekly Prize Draw", 
-      title: "£10,000 Weekly Prize",
-      subtitle: "Could be yours when you spend",
-      prize: "£10",
-      prizeLabel: "on draw games online this week",
+      title: "₦10,000,000 Weekly Prize",
+      subtitle: "Fit be your own when you spend just",
+      prize: "₦10,000",
+      prizeLabel: "on draw games online this week o!",
       price: null,
       bgImage: "bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600",
       textColor: "text-white",
       icon: <Gift className="h-6 w-6" />,
-      description: "Online only. Week ends 11pm Sunday. 14 days to accept prize.",
-      terms: "Promo Ts&Cs apply.",
+      description: "Online only. Week ends 11pm Sunday. 14 days to collect your gbege.",
+      terms: "Promo Ts&Cs apply. No dulling!",
       gameId: "weekly-prize", // Special promo, route to games page
       category: "promotion"
     },
@@ -46,14 +46,14 @@ const PromoBannersSection = () => {
       id: 3,
       type: "Special Offer",
       title: "Double Bonus Points",
-      subtitle: "Earn double points on all",
+      subtitle: "Earn double points on all your",
       prize: "Lotto",
-      prizeLabel: "tickets this weekend",
-      price: "£2.00",
+      prizeLabel: "tickets this weekend - e go sweet!",
+      price: "₦2,000",
       bgImage: "bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600",
       textColor: "text-white", 
       icon: <Star className="h-6 w-6" />,
-      description: "Limited time offer for registered players",
+      description: "Limited time offer for registered players - no time to waste!",
       gameId: "lotto", // Route to Lotto game
       category: "game"
     }
@@ -153,8 +153,8 @@ const PromoBannersSection = () => {
                     {offer.price && isAuthenticated 
                       ? `Play Now for ${offer.price}` 
                       : offer.price && !isAuthenticated
-                      ? 'Sign In to Play'
-                      : 'Learn More'
+                      ? 'Sign In to Blow!'
+                      : 'Learn More Jare'
                     }
                   </Button>
                 </div>
@@ -168,7 +168,7 @@ const PromoBannersSection = () => {
           <div className="relative">
             {/* Carousel Controls */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-800">Special Offers</h2>
+              <h2 className="text-xl font-bold text-gray-800">Special Offers Wey Hot! 🔥💰</h2>
               <div className="flex space-x-2">
                 <Button 
                   variant="outline" 
@@ -248,8 +248,8 @@ const PromoBannersSection = () => {
                           {offer.price && isAuthenticated 
                             ? `Play Now for ${offer.price}` 
                             : offer.price && !isAuthenticated
-                            ? 'Sign In to Play'
-                            : 'Learn More'
+                            ? 'Sign In to Blow!'
+                            : 'Learn More Jare'
                           }
                         </Button>
                       </CardContent>

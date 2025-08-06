@@ -16,7 +16,7 @@ const GamesPage = () => {
           <h1 className="text-5xl font-bold mb-6">Choose Your Game</h1>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
             From life-changing jackpots to fixed prizes, find the perfect lottery game for you. 
-            Every ticket supports good causes across the UK.
+            Every ticket supports good causes across the Naija.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition">
@@ -40,19 +40,19 @@ const GamesPage = () => {
             <div className="grid lg:grid-cols-2 items-center">
               <div className="p-12 text-white">
                 <h3 className="text-4xl font-bold mb-4">Lotto</h3>
-                <p className="text-xl text-red-100 mb-6">The UK's favourite lottery game</p>
+                <p className="text-xl text-red-100 mb-6">The Naija's favourite lottery game</p>
                 <p className="text-red-100 mb-8 leading-relaxed">
-                  Play Lotto for your chance to win life-changing jackpots starting from £2 million. 
+                  Play Lotto for your chance to win life-changing jackpots starting from ₦2 million. 
                   With draws twice a week, you have plenty of chances to become a millionaire.
                 </p>
                 <div className="grid grid-cols-2 gap-6 mb-8">
                   <div>
                     <div className="text-red-200 text-sm">Next Jackpot</div>
-                    <div className="text-3xl font-bold">£2M+</div>
+                    <div className="text-3xl font-bold">₦2M+</div>
                   </div>
                   <div>
                     <div className="text-red-200 text-sm">Ticket Price</div>
-                    <div className="text-3xl font-bold">£2</div>
+                    <div className="text-3xl font-bold">₦2</div>
                   </div>
                 </div>
                 <Link
@@ -111,7 +111,7 @@ const GamesPage = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Ticket Price</span>
-                      <span className="font-bold text-gray-900">£{game.ticketPrice}</span>
+                      <span className="font-bold text-gray-900">₦{game.ticketPrice}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Draw Days</span>
@@ -171,7 +171,7 @@ const GamesPage = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 font-semibold text-gray-900">£{game.ticketPrice}</td>
+                      <td className="px-6 py-4 font-semibold text-gray-900">₦{game.ticketPrice}</td>
                       <td className="px-6 py-4 font-semibold text-gray-900">{game.minJackpot}</td>
                       <td className="px-6 py-4 text-gray-700">
                         {game.maxNumbers} from {game.numberRange}
@@ -245,7 +245,7 @@ const GamesPage = () => {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Playing?</h2>
           <p className="text-xl text-white/90 mb-8">
-            Join millions of players and support good causes across the UK.
+            Join millions of players and support good causes across Naija.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

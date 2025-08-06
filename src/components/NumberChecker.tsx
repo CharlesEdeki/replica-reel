@@ -23,7 +23,7 @@ const NumberChecker = () => {
       drawDays: ["Wednesday", "Saturday"]
     },
     euromillions: {
-      name: "EuroMillions",
+      name: "AfroMillions",
       numberRange: 50,
       maxNumbers: 5,
       color: "bg-blue-500",
@@ -94,19 +94,19 @@ const NumberChecker = () => {
       tier = "Match 6";
       winning = true;
     } else if (matchedNumbers.length === 5) {
-      prize = "£1,750";
+      prize = "₦1,750";
       tier = "Match 5";
       winning = true;
     } else if (matchedNumbers.length === 4) {
-      prize = "£140";
+      prize = "₦140";
       tier = "Match 4";
       winning = true;
     } else if (matchedNumbers.length === 3) {
-      prize = "£30";
+      prize = "₦30";
       tier = "Match 3";
       winning = true;
     } else if (matchedNumbers.length === 2) {
-      prize = "£3";
+      prize = "₦3";
       tier = "Match 2";
       winning = true;
     }

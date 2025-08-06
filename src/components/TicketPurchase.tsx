@@ -107,7 +107,7 @@ const TicketPurchase = () => {
                   }`}
                 >
                   <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">{game.name}</h3>
-                  <p className="text-xs md:text-sm opacity-90">£{game.price.toFixed(2)} per line</p>
+                  <p className="text-xs md:text-sm opacity-90">₦{game.price.toFixed(2)} per line</p>
                   <p className="text-xs opacity-75">Draws: {game.drawDays.join(', ')}</p>
                 </div>
               ))}
@@ -196,10 +196,10 @@ const TicketPurchase = () => {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-semibold text-sm md:text-base">Total Cost:</span>
-                  <span className="text-xl md:text-2xl font-bold text-blue-600">£{totalCost.toFixed(2)}</span>
+                  <span className="text-xl md:text-2xl font-bold text-blue-600">₦{totalCost.toFixed(2)}</span>
                 </div>
                 <p className="text-xs md:text-sm text-gray-600">
-                  {selectedLines} line{selectedLines > 1 ? 's' : ''} × £{currentGame.price.toFixed(2)} per line
+                  {selectedLines} line{selectedLines > 1 ? 's' : ''} × ₦{currentGame.price.toFixed(2)} per line
                 </p>
               </div>
 

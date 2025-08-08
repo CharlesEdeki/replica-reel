@@ -54,7 +54,7 @@ const MoreGamesSection = () => {
       bgGradient: "bg-gradient-to-br from-green-400 via-emerald-500 to-green-600",
       textColor: "text-white",
       buttonColor: "bg-blue-800 hover:bg-blue-900",
-      gameId: "instant-win"
+      gameId: "lotto"
     },
     {
       id: "afromillions-hotpicks",
@@ -67,7 +67,7 @@ const MoreGamesSection = () => {
       bgGradient: "bg-gradient-to-br from-orange-400 via-red-400 to-red-500",
       textColor: "text-white",
       buttonColor: "bg-blue-800 hover:bg-blue-900",
-      gameId: "afromillions-hotpicks"
+      gameId: "afromillions"
     },
     {
       id: "lotto",

@@ -22,7 +22,7 @@ const HeroSection = () => {
       bgGradient: "from-green-400 via-emerald-500 to-green-600",
       decorativeElement: "💎",
       image: "/instant-win-bg.png",
-      gameId: "instant-win"
+      gameId: "lotto"
     },
     {
       id: "cashword-extra",
@@ -34,7 +34,7 @@ const HeroSection = () => {
       bgGradient: "from-purple-500 via-pink-500 to-red-500",
       decorativeElement: "💰",
       image: "/cashword-bg.png",
-      gameId: "instant-win"
+      gameId: "afromillions"
     },
     {
       id: "lucky-lines",
@@ -46,7 +46,7 @@ const HeroSection = () => {
       bgGradient: "from-blue-500 via-indigo-500 to-purple-600",
       decorativeElement: "🍀",
       image: "/lucky-lines-bg.png",
-      gameId: "instant-win"
+      gameId: "set-for-life"
     },
     {
       id: "monopoly-gold",
@@ -58,7 +58,7 @@ const HeroSection = () => {
       bgGradient: "from-yellow-400 via-orange-500 to-red-600",
       decorativeElement: "🎩",
       image: "/monopoly-bg.png",
-      gameId: "instant-win"
+      gameId: "thunderball"
     }
   ];
 

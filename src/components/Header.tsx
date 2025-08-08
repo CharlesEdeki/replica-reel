@@ -19,11 +19,11 @@ function GamesMegaMenu({ isOpen, onClose }) {
     },
     {
       title: "This Tuesday", 
-      subtitle: "EUROMILLIONS",
+      subtitle: "AFROMILLIONS",
       amount: "₦157M",
       color: "bg-gradient-to-br from-orange-400 to-orange-500",
       textColor: "text-white",
-      gameId: "euromillions"
+      gameId: "afromillions"
     },
     {
       title: "This Monday",
@@ -44,15 +44,15 @@ function GamesMegaMenu({ isOpen, onClose }) {
       amount: "₦350K",
       color: "bg-gradient-to-br from-red-500 to-red-600",
       textColor: "text-white",
-      gameId: "lotto-hotpicks"
+      gameId: "lotto"
     },
     {
       title: "This Tuesday",
-      subtitle: "EUROMILLIONS HOTPICKS", 
+      subtitle: "AFROMILLIONS HOTPICKS", 
       amount: "₦1M",
       color: "bg-gradient-to-br from-orange-500 to-orange-600",
       textColor: "text-white",
-      gameId: "euromillions-hotpicks"
+      gameId: "afromillions"
     },
     {
       title: "This Tuesday",
@@ -162,10 +162,10 @@ function GamesMegaMenu({ isOpen, onClose }) {
 function ResultsMegaMenu({ isOpen, onClose }) {
   const resultGames = [
     { name: "LOTTO", color: "bg-red-500", buttonColor: "border-red-500 text-red-500", gameId: "lotto" },
-    { name: "EUROMILLIONS", color: "bg-orange-500", buttonColor: "border-orange-500 text-orange-500", gameId: "euromillions" },
+    { name: "AFROMILLIONS", color: "bg-orange-500", buttonColor: "border-orange-500 text-orange-500", gameId: "afromillions" },
     { name: "SET FOR LIFE", color: "bg-cyan-500", buttonColor: "border-cyan-500 text-cyan-500", gameId: "set-for-life" },
     { name: "LOTTO HOTPICKS", color: "bg-red-500", buttonColor: "border-red-500 text-red-500", gameId: "lotto-hotpicks" },
-    { name: "EUROMILLIONS HOTPICKS", color: "bg-orange-500", buttonColor: "border-orange-500 text-orange-500", gameId: "euromillions-hotpicks" },
+    { name: "AFROMILLIONS HOTPICKS", color: "bg-orange-500", buttonColor: "border-orange-500 text-orange-500", gameId: "afromillions-hotpicks" },
     { name: "THUNDERBALL", color: "bg-purple-500", buttonColor: "border-purple-500 text-purple-500", gameId: "thunderball" }
   ];
 

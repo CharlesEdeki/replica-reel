@@ -268,7 +268,7 @@ const GamePlayPage: React.FC = () => {
               <p className="text-white/90 text-lg">{game.tagline}</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold">£{game.ticketPrice}</div>
+              <div className="text-2xl font-bold">₦{game.ticketPrice}</div>
               <div className="text-white/80 text-sm">per line</div>
             </div>
           </div>
@@ -369,7 +369,7 @@ const GamePlayPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-between items-center pt-4 border-t">
             <div className="text-sm text-gray-600">
               {isSelectionComplete() 
-                ? `✅ Selection complete - Ready to purchase for £${game.ticketPrice}`
+                ? `✅ Selection complete - Ready to purchase for ₦${game.ticketPrice}`
                 : `❌ Please complete your number selection`
               }
             </div>
@@ -386,7 +386,7 @@ const GamePlayPage: React.FC = () => {
               ) : (
                 <>
                   <CreditCard className="w-4 h-4" />
-                  Buy Ticket - £{game.ticketPrice}
+                  Buy Ticket - ₦{game.ticketPrice}
                 </>
               )}
             </button>

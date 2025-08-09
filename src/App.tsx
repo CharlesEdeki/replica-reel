@@ -8,14 +8,15 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ResultsPage from "./pages/ResultsPage";
-import GamesPage from "./pages/GamesOverviewPage";
-import GameDetailPage from "./pages/GamesListPage";
+import GamesListPage from "./pages/GamesListPage";
+import GameDetailPage from "./pages/GameDetailPage"; // Fixed import - now points to the correct file
 import GamePlayPage from "./pages/GamePlayPage";
 import DashboardPage from "./pages/DashboardPage";
 import CheckNumbersPage from "./pages/CheckNumbersPage";
 import BuyTicketsPage from "./pages/BuyTicketsPage";
 import SignInPage from "./pages/SignInPage";
 import RegistrationPage from "./pages/RegistrationPage";
+import GameOverviewPage from "./pages/GamesOverviewPage";
 
 const queryClient = new QueryClient();
 
@@ -32,11 +33,17 @@ const App = () => (
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/results" element={<ResultsPage />} />
-            <Route path="/games" element={<GamesPage />} />
+            
+            {/* Game-related routes */}
+            <Route path="/games" element={<GameOverviewPage />} />
             <Route path="/games/:gameId" element={<GameDetailPage />} />
             <Route path="/games/:gameId/play" element={<GamePlayPage />} />
+            
+            {/* Other routes */}
             <Route path="/check-numbers" element={<CheckNumbersPage />} />
             <Route path="/buy-tickets" element={<BuyTicketsPage />} />
+            
+            {/* Catch-all route for 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

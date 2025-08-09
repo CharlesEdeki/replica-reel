@@ -2,103 +2,35 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, Trophy, CheckCircle, XCircle, Target, Clock } from "lucide-react";
 import Header from "@/components/Header";
+import { DRAW_RESULTS, checkTicketAgainstResult, type DrawResult } from '@/services/resultsService';
 
-interface DrawResult {
-  id: string;
-  gameId: string;
-  gameName: string;
-  drawDate: string;
-  numbers: {
-    main: number[];
-    bonus?: number[];
-  };
-  jackpot: string;
-  winners?: {
-    tier: string;
-    matches: number;
-    winners: number;
-    prize: string;
-  }[];
-}
+
+// interface DrawResult {
+//   id: string;
+//   gameId: string;
+//   gameName: string;
+//   drawDate: string;
+//   numbers: {
+//     main: number[];
+//     bonus?: number[];
+//   };
+//   jackpot: string;
+//   winners?: {
+//     tier: string;
+//     matches: number;
+//     winners: number;
+//     prize: string;
+//   }[];
+// }
 
 const ResultsPage = () => {
   const [results, setResults] = useState<DrawResult[]>([]);
   const [userTickets, setUserTickets] = useState<any[]>([]);
   const [selectedGame, setSelectedGame] = useState<string>('all');
 
-  // Sample draw results - Updated with Naira and Nigerian context
-  const sampleResults: DrawResult[] = [
-    {
-      id: "lotto-2024-08-04",
-      gameId: "lotto",
-      gameName: "Lotto",
-      drawDate: "2024-08-04T20:00:00Z",
-      numbers: {
-        main: [12, 18, 23, 34, 42, 47],
-        bonus: [7]
-      },
-      jackpot: "₦5,200,000,000",
-      winners: [
-        { tier: "Match 6", matches: 6, winners: 0, prize: "Rollover o!" },
-        { tier: "Match 5 + Bonus", matches: 5, winners: 3, prize: "₦1,750,000" },
-        { tier: "Match 5", matches: 5, winners: 156, prize: "₦140,000" },
-        { tier: "Match 4", matches: 4, winners: 8234, prize: "₦30,000" },
-        { tier: "Match 3", matches: 3, winners: 156789, prize: "₦3,000" }
-      ]
-    },
-    {
-      id: "afromillions-2024-08-03",
-      gameId: "afromillions",
-      gameName: "AfroMillions",
-      drawDate: "2024-08-03T20:00:00Z",
-      numbers: {
-        main: [3, 14, 28, 33, 44],
-        bonus: [2, 11]
-      },
-      jackpot: "₦157,000,000,000",
-      winners: [
-        { tier: "Match 5 + 2 Stars", matches: 7, winners: 0, prize: "Rollover sharp!" },
-        { tier: "Match 5 + 1 Star", matches: 6, winners: 2, prize: "₦234,567,000" },
-        { tier: "Match 5", matches: 5, winners: 4, prize: "₦13,456,000" }
-      ]
-    },
-    {
-      id: "thunderball-2024-08-04",
-      gameId: "thunderball",
-      gameName: "Thunderball",
-      drawDate: "2024-08-04T20:00:00Z",
-      numbers: {
-        main: [6, 13, 21, 29, 34],
-        bonus: [8]
-      },
-      jackpot: "₦500,000,000",
-      winners: [
-        { tier: "Match 5 + Thunderball", matches: 6, winners: 1, prize: "₦500,000,000" },
-        { tier: "Match 5", matches: 5, winners: 12, prize: "₦5,000,000" },
-        { tier: "Match 4 + Thunderball", matches: 5, winners: 89, prize: "₦250,000" }
-      ]
-    },
-    {
-      id: "set-for-life-2024-08-05",
-      gameId: "set-for-life",
-      gameName: "Set For Life",
-      drawDate: "2024-08-05T20:00:00Z",
-      numbers: {
-        main: [5, 17, 22, 31, 39],
-        bonus: [4]
-      },
-      jackpot: "₦10,000,000/month for 30 years",
-      winners: [
-        { tier: "Match 5 + Life Ball", matches: 6, winners: 1, prize: "₦10,000,000/month" },
-        { tier: "Match 5", matches: 5, winners: 3, prize: "₦10,000/month" },
-        { tier: "Match 4 + Life Ball", matches: 5, winners: 45, prize: "₦350,000" }
-      ]
-    }
-  ];
-
-  useEffect(() => {
+    useEffect(() => {
     // Load results
-    setResults(sampleResults);
+    setResults(DRAW_RESULTS);
     
     // Load user tickets - FIXED: Don't use localStorage in artifacts
     // In a real app, this would come from your state management or API
@@ -136,19 +68,27 @@ const ResultsPage = () => {
   }, []);
 
   // FIXED: Corrected the ticket checking logic
+  // Fixed checkTicketAgainstResult function
   const checkTicketAgainstResult = (ticket: any, result: DrawResult) => {
     if (ticket.gameId !== result.gameId) return null;
+
+    console.log('Checking ticket:', ticket.numbers);
+    console.log('Against result:', result.numbers);
 
     // Check main number matches
     const mainMatches = ticket.numbers.main.filter((num: number) => 
       result.numbers.main.includes(num)
     ).length;
 
-    // Check bonus number matches  
-    const bonusMatches = ticket.numbers.bonus && result.numbers.bonus ? 
-      ticket.numbers.bonus.filter((num: number) => 
+    // Check bonus number matches - Fixed logic here
+    let bonusMatches = 0;
+    if (ticket.numbers.bonus && result.numbers.bonus) {
+      bonusMatches = ticket.numbers.bonus.filter((num: number) => 
         result.numbers.bonus?.includes(num)
-      ).length : 0;
+      ).length;
+    }
+
+    console.log(`Main matches: ${mainMatches}, Bonus matches: ${bonusMatches}`);
 
     // Determine prize based on matches and game type
     let prize = "No Prize";
@@ -177,7 +117,7 @@ const ResultsPage = () => {
         tier = "Match 3 - Something small!";
         isWinner = true;
       }
-    } else if (result.gameId === 'euromillions') {
+    } else if (result.gameId === 'afromillions') {
       if (mainMatches === 5 && bonusMatches === 2) {
         prize = result.jackpot;
         tier = "JACKPOT! Na your time o! 🔥💰";
@@ -202,6 +142,14 @@ const ResultsPage = () => {
         prize = "₦50,000";
         tier = "Match 3 + Star";
         isWinner = true;
+      } else if (mainMatches === 3) {
+        prize = "₦20,000";
+        tier = "Match 3";
+        isWinner = true;
+      } else if (mainMatches === 2 && bonusMatches >= 1) {
+        prize = "₦10,000";
+        tier = "Match 2 + Star";
+        isWinner = true;
       }
     } else if (result.gameId === 'thunderball') {
       if (mainMatches === 5 && bonusMatches >= 1) {
@@ -223,6 +171,14 @@ const ResultsPage = () => {
       } else if (mainMatches === 3 && bonusMatches >= 1) {
         prize = "₦20,000";
         tier = "Match 3 + Thunderball";
+        isWinner = true;
+      } else if (mainMatches === 3) {
+        prize = "₦10,000";
+        tier = "Match 3";
+        isWinner = true;
+      } else if (bonusMatches >= 1) {
+        prize = "₦3,000";
+        tier = "Thunderball Match";
         isWinner = true;
       }
     } else if (result.gameId === 'set-for-life') {
@@ -246,8 +202,18 @@ const ResultsPage = () => {
         prize = "₦30,000";
         tier = "Match 3 + Life Ball";
         isWinner = true;
+      } else if (mainMatches === 3) {
+        prize = "₦10,000";
+        tier = "Match 3";
+        isWinner = true;
+      } else if (mainMatches === 2 && bonusMatches >= 1) {
+        prize = "₦5,000";
+        tier = "Match 2 + Life Ball";
+        isWinner = true;
       }
     }
+
+    console.log(`Final result - Winner: ${isWinner}, Prize: ${prize}, Tier: ${tier}`);
 
     return {
       mainMatches,
@@ -262,7 +228,7 @@ const ResultsPage = () => {
   const getGameColor = (gameId: string) => {
     const colors: { [key: string]: string } = {
       'lotto': 'bg-red-500',
-      'euromillions': 'bg-blue-500', 
+      'afromillions': 'bg-blue-500', 
       'thunderball': 'bg-purple-500',
       'set-for-life': 'bg-teal-500'
     };
@@ -377,7 +343,7 @@ const ResultsPage = () => {
                         <div>
                           <div className="text-sm text-gray-600 mb-2">
                             {result.gameId === 'lotto' ? 'Bonus Ball' : 
-                             result.gameId === 'euromillions' ? 'Lucky Stars' : 
+                             result.gameId === 'afromillions' ? 'Lucky Stars' : 
                              result.gameId === 'set-for-life' ? 'Life Ball' :
                              'Special Numbers'}
                           </div>

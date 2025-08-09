@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   Calendar, 
@@ -24,12 +24,67 @@ const GameDetailPage = () => {
   const { gameId } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const [game, setGame] = useState<Game | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Use the centralized game data
-  const game = gameId ? getGameById(gameId) : null;
+  // Debug logging
+  useEffect(() => {
+    console.log('GameDetailPage mounted');
+    console.log('URL params:', { gameId });
+    console.log('Full URL:', window.location.href);
+    console.log('Pathname:', window.location.pathname);
+    
+    if (gameId) {
+      console.log('Looking for game with ID:', gameId);
+      const foundGame = getGameById(gameId);
+      console.log('Found game:', foundGame);
+      
+      if (foundGame) {
+        setGame(foundGame);
+      } else {
+        console.error('Game not found for ID:', gameId);
+      }
+    } else {
+      console.error('No gameId in params');
+    }
+    
+    setIsLoading(false);
+  }, [gameId]);
 
-  console.log('GameId from URL:', gameId);
-  console.log('Found game:', game);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading game details...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!gameId) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Invalid Game URL</h1>
+          <p className="text-gray-600 mb-4">
+            The URL is missing a game identifier.
+          </p>
+          <Link
+            to="/games"
+            className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Games
+          </Link>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!game) {
     return (
@@ -39,6 +94,9 @@ const GameDetailPage = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Game Not Found</h1>
           <p className="text-gray-600 mb-4">
             The game "{gameId}" you're looking for doesn't exist.
+          </p>
+          <p className="text-sm text-gray-500 mb-6">
+            Available games: lotto, afromillions, thunderball, set-for-life
           </p>
           <Link
             to="/games"

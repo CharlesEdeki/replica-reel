@@ -243,26 +243,26 @@ const EnhancedGamesShowcase = () => {
     {
       game: "LOTTO",
       title: "IT'S A ROLLOVER",
-      prize: "₦5.2M",
+      prize: "₦2M+",
       drawDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
       backgroundColor: "bg-red-600",
       textColor: "text-white",
       buttonText: "PLAY FOR",
       buttonPrice: "₦2.00",
-      jackpotEstimate: "₦5.2M",
+      jackpotEstimate: "₦2M+",
       gameId: "lotto"
     },
     {
       game: "AFROMILLIONS",
       title: "MEGA JACKPOT",
       subtitle: "Life-changing prizes await",
-      prize: "₦14M",
+      prize: "₦14M+",
       drawDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 day from now
-      backgroundColor: "bg-blue-600",
+      backgroundColor: "bg-yellow-500",
       textColor: "text-white",
       buttonText: "PLAY FOR",
       buttonPrice: "₦2.50",
-      jackpotEstimate: "₦14M",
+      jackpotEstimate: "₦14M+",
       gameId: "afromillions"
     },
     {
@@ -270,7 +270,7 @@ const EnhancedGamesShowcase = () => {
       title: "₦10,000 every month for 30 years",
       prize: "",
       drawDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
-      backgroundColor: "bg-teal-600",
+      backgroundColor: "bg-green-600",
       textColor: "text-white",
       buttonText: "PLAY FOR",
       buttonPrice: "₦1.50",

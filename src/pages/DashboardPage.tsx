@@ -18,7 +18,20 @@ import { getGameById } from '@/data/games';
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getRelevantResultForTicket, checkTicketAgainstResult, DRAW_RESULTS } from '@/services/resultsService';
 
+
+// interface DrawResult {
+//   id: string;
+//   gameId: string;
+//   gameName: string;
+//   drawDate: string;
+//   numbers: {
+//     main: number[];
+//     bonus?: number[];
+//   };
+//   jackpot: string;
+// }
 interface SelectedNumbers {
   main: number[];
   bonus: number[];
@@ -71,18 +84,27 @@ const DashboardPage: React.FC = () => {
     loadUserTickets();
   }, [isAuthenticated, loadUserTickets, navigate]);
 
-  const simulateDrawResults = (ticketId: string) => {
+  const checkTicketAgainstResults = (ticketId: string) => {
     const ticket = tickets.find(t => t.id === ticketId);
     if (!ticket) return;
 
-    // Simple random win/lose simulation (10% chance to win something)
-    const isWinner = Math.random() < 0.1;
-    const winAmount = isWinner ? Math.floor(Math.random() * 50000) + 500 : 0;
+    // Get the relevant draw result for this ticket
+    const relevantResult = getRelevantResultForTicket(ticket.gameId, ticket.purchaseDate);
+
+    if (!relevantResult) {
+      toast.info(`No draw results available yet for your ${ticket.gameName} ticket.`);
+      return;
+    }
+
+    // Use the shared checking logic
+    const checkResult = checkTicketAgainstResult(ticket, relevantResult);
+    
+    if (!checkResult) return;
 
     const updatedTicket = {
       ...ticket,
-      status: isWinner ? 'won' as const : 'lost' as const,
-      winAmount: winAmount || undefined
+      status: checkResult.isWinner ? 'won' as const : 'lost' as const,
+      winAmount: checkResult.winAmount || undefined
     };
 
     // Update in state
@@ -96,10 +118,10 @@ const DashboardPage: React.FC = () => {
       );
       localStorage.setItem('lotteryTickets', JSON.stringify(updatedTickets));
 
-      if (isWinner) {
-        toast.success(`🎉 Omo! You don win! ₦${winAmount.toLocaleString()} for your ${ticket.gameName} ticket! E choke!`);
+      if (checkResult.isWinner) {
+        toast.success(`🎉 Omo! You don win! ${checkResult.tier} - ₦${checkResult.winAmount?.toLocaleString()}! E choke!`);
       } else {
-        toast.info(`Your ${ticket.gameName} ticket no enter this time. No wahala, better luck next time! Keep trying!`);
+        toast.info(`Your ${ticket.gameName} ticket no enter this time. You get ${checkResult.mainMatches} main matches${checkResult.bonusMatches > 0 ? ` and ${checkResult.bonusMatches} bonus matches` : ''}, but e no reach to win. Better luck next time!`);
       }
     } catch (error) {
       console.error('Error updating ticket:', error);
@@ -173,6 +195,92 @@ const DashboardPage: React.FC = () => {
     );
   }
 
+  const createInstantWinTicket = (gameId: string) => {
+    if (!user?.id) return;
+  
+    const gameResult = DRAW_RESULTS.find(r => r.gameId === gameId);
+    if (!gameResult) return;
+  
+    const winningTicket: LotteryTicket = {
+      id: `instant-win-${gameId}-${Date.now()}`,
+      gameId: gameId,
+      gameName: gameResult.gameName,
+      userId: user.id,
+      numbers: {
+        main: [...gameResult.numbers.main], // Copy exact winning numbers
+        bonus: [...(gameResult.numbers.bonus || [])]
+      },
+      ticketPrice: getTicketPrice(gameId), // You might need this helper
+      purchaseDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Yesterday
+      drawDate: gameResult.drawDate,
+      status: 'pending'
+    };
+
+    try {
+      const existingTickets = JSON.parse(localStorage.getItem('lotteryTickets') || '[]');
+      const updatedTickets = [...existingTickets, winningTicket];
+      localStorage.setItem('lotteryTickets', JSON.stringify(updatedTickets));
+      
+      loadUserTickets();
+      toast.success(`🎯 Created instant win ticket for ${gameResult.gameName}! Now check it to see the win! 🚀`);
+    } catch (error) {
+      console.error('Error creating instant win ticket:', error);
+    }
+  };  
+
+  // Helper function for ticket prices
+  const getTicketPrice = (gameId: string): number => {
+    const prices: { [key: string]: number } = {
+      'lotto': 200,
+      'afromillions': 500,
+      'thunderball': 300,
+      'set-for-life': 400
+    };
+    return prices[gameId] || 200;
+  };  
+
+    // Create a ticket with some matches but not full win (for testing partial wins)
+  const createPartialWinTicket = (gameId: string, matchCount: number = 3) => {
+    if (!user?.id) return;
+    
+    const gameResult = DRAW_RESULTS.find(r => r.gameId === gameId);
+    if (!gameResult) return;
+    
+    // Take some winning numbers + some random ones
+    const partialNumbers = [
+      ...gameResult.numbers.main.slice(0, matchCount), // Take first X winning numbers
+      ...Array.from({length: 6 - matchCount}, () => 
+        Math.floor(Math.random() * 49) + 1
+      ).filter(num => !gameResult.numbers.main.includes(num)) // Add non-winning numbers
+    ];
+    
+    const partialTicket: LotteryTicket = {
+      id: `partial-win-${gameId}-${matchCount}-${Date.now()}`,
+      gameId: gameId,
+      gameName: gameResult.gameName,
+      userId: user.id,
+      numbers: {
+        main: partialNumbers.slice(0, gameResult.numbers.main.length),
+        bonus: matchCount > 4 ? [...(gameResult.numbers.bonus || [])] : [Math.floor(Math.random() * 12) + 1]
+      },
+      ticketPrice: getTicketPrice(gameId),
+      purchaseDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      drawDate: gameResult.drawDate,
+      status: 'pending'
+    };
+
+    try {
+      const existingTickets = JSON.parse(localStorage.getItem('lotteryTickets') || '[]');
+      const updatedTickets = [...existingTickets, partialTicket];
+      localStorage.setItem('lotteryTickets', JSON.stringify(updatedTickets));
+      
+      loadUserTickets();
+      toast.success(`🎲 Created ${matchCount}-match ticket for ${gameResult.gameName}! Check it to see partial win!`);
+    } catch (error) {
+      console.error('Error creating partial win ticket:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -203,6 +311,80 @@ const DashboardPage: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Testing Tools - Remove in production */}
+        {/* <div className="mb-8 p-6 bg-yellow-50 border-2 border-yellow-200 rounded-xl">
+          <h3 className="text-lg font-bold text-yellow-800 mb-4">🧪 Testing Tools (Dev Only)</h3>
+          
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-gray-700 mb-2">Create Instant Jackpot Winners:</h4>
+              <div className="flex flex-wrap gap-2">
+                <button 
+                  onClick={() => createInstantWinTicket('lotto')} 
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                >
+                  🎰 Lotto Jackpot (₦5.2B)
+                </button>
+                <button 
+                  onClick={() => createInstantWinTicket('afromillions')} 
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                >
+                  🌟 AfroMillions Jackpot (₦157B)
+                </button>
+                <button 
+                  onClick={() => createInstantWinTicket('thunderball')} 
+                  className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                >
+                  ⚡ Thunderball Jackpot (₦500M)
+                </button>
+                <button 
+                  onClick={() => createInstantWinTicket('set-for-life')} 
+                  className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                >
+                  🏆 Set For Life Jackpot
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-gray-700 mb-2">Create Partial Winners:</h4>
+              <div className="flex flex-wrap gap-2">
+                <button 
+                  onClick={() => createPartialWinTicket('lotto', 5)} 
+                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm transition"
+                >
+                  5 Match Lotto (₦140K)
+                </button>
+                <button 
+                  onClick={() => createPartialWinTicket('lotto', 4)} 
+                  className="bg-green-400 hover:bg-green-500 text-white px-3 py-2 rounded text-sm transition"
+                >
+                  4 Match Lotto (₦30K)
+                </button>
+                <button 
+                  onClick={() => createPartialWinTicket('lotto', 3)} 
+                  className="bg-green-300 hover:bg-green-400 text-white px-3 py-2 rounded text-sm transition"
+                >
+                  3 Match Lotto (₦3K)
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <button
+                onClick={() => {
+                  localStorage.removeItem('lotteryTickets');
+                  loadUserTickets();
+                  toast.success('All tickets cleared! Fresh start! 🧹');
+                }}
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+              >
+                🧹 Clear All Tickets
+              </button>
+            </div>
+          </div>
+        </div> */}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -342,7 +524,7 @@ const DashboardPage: React.FC = () => {
                       <div className="flex flex-col sm:flex-row gap-2">
                         {ticket.status === 'pending' && (
                           <button
-                            onClick={() => simulateDrawResults(ticket.id)}
+                            onClick={() => checkTicketAgainstResults(ticket.id)}
                             className="flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition text-sm"
                           >
                             <Eye className="w-4 h-4" />

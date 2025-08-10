@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/services/resultsService.ts
 // Create this new file to centralize all draw results
 

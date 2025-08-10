@@ -155,7 +155,7 @@ const TicketPurchase = () => {
     };
 
     const gameDays = drawDays[gameId] || [6]; // Default to Saturday
-    let nextDraw = new Date(now);
+    const nextDraw = new Date(now);
     
     // Find next draw day
     while (!gameDays.includes(nextDraw.getDay())) {

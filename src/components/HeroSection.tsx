@@ -306,32 +306,32 @@ const HeroSection = () => {
 
         {/* Desktop Layout - Side by Side */}
         <div className="hidden md:flex min-h-[500px]">
-          {/* Left Side - Set For Life with Full Image Coverage */}
+          {/* Left Side - Set For Life with Better Text/Image Balance */}
           <div 
             onClick={handleSetForLifePlay}
             className="flex-1 relative group cursor-pointer transition-all duration-300 hover:brightness-95 block"
           >
-            {/* Background with win.jpg image covering full left side */}
+            {/* Background with win.jpg image positioned to the right */}
             <div 
               className="absolute inset-0"
               style={{
                 backgroundImage: 'url("/win.jpg")',
                 backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                backgroundPosition: 'right center' // Position celebrant on the right side
               }}
             ></div>
             
-            {/* Gradient overlay for better text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent"></div>
+            {/* Smart gradient overlay - transparent on right, solid on left for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/95 via-yellow-400/80 via-yellow-400/50 to-transparent"></div>
             
             {/* Decorative elements */}
-            <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full"></div>
+            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full"></div>
             <div className="absolute bottom-10 left-10 w-20 h-20 bg-white/5 rounded-full"></div>
             
-            <div className="relative z-10 p-8 md:p-12 h-full flex flex-col justify-between text-white">
+            <div className="relative z-10 p-8 md:p-12 h-full flex flex-col justify-between text-black">
               {/* Top label */}
-              <div className="mb-6">
-                <div className="text-sm font-bold uppercase tracking-wide mb-4 opacity-90 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full inline-block">
+              <div className="mb-6 max-w-md">
+                <div className="text-sm font-bold uppercase tracking-wide mb-4 bg-black/20 text-white px-3 py-1 rounded-full inline-block">
                   This Monday O!
                 </div>
                 <h1 className="text-2xl md:text-3xl font-black mb-2 text-shadow-lg">
@@ -339,24 +339,26 @@ const HeroSection = () => {
                 </h1>
               </div>
 
-              {/* Main content */}
-              <div className="flex-1 flex flex-col justify-center mb-8">
-                <h2 className="text-4xl md:text-6xl font-black leading-none mb-4 text-shadow-2xl bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
-                  WIN ₦10,000,000
-                </h2>
-                <h3 className="text-4xl md:text-6xl font-black leading-none mb-4 text-shadow-2xl bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
-                  EVERY MONTH
-                </h3>
-                <h4 className="text-4xl md:text-6xl font-black leading-none mb-6 text-shadow-2xl bg-gradient-to-r from-green-300 to-emerald-400 bg-clip-text text-transparent">
-                  FOR 30 YEARS<span className="text-2xl">*</span>
-                </h4>
-                <p className="text-lg font-bold text-yellow-300 drop-shadow-lg">
+              {/* Main content - positioned on left side, text more visible */}
+              <div className="flex-1 flex flex-col justify-center mb-8 max-w-2xl">
+                <div className="space-y-2">
+                  <h2 className="text-4xl md:text-6xl font-black leading-tight drop-shadow-2xl text-black">
+                    WIN ₦10,000,000
+                  </h2>
+                  <h3 className="text-4xl md:text-6xl font-black leading-tight drop-shadow-2xl text-black">
+                    EVERY MONTH
+                  </h3>
+                  <h4 className="text-4xl md:text-6xl font-black leading-tight drop-shadow-2xl text-black">
+                    FOR 30 YEARS<span className="text-2xl">*</span>
+                  </h4>
+                </div>
+                <p className="text-lg font-bold text-red-600 drop-shadow-lg mt-4">
                   NA YOUR TIME TO BLOW! 🔥💰
                 </p>
               </div>
 
               {/* Bottom section with play button */}
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 max-w-4xl">
                 <Button 
                   onClick={handleSetForLifePlay}
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-2xl border-2 border-white/20"

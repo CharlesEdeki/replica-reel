@@ -18,20 +18,8 @@ import { getGameById } from '@/data/games';
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { getRelevantResultForTicket, checkTicketAgainstResult, DRAW_RESULTS } from '@/services/resultsService';
+import { DRAW_RESULTS, checkTicketAgainstResult } from '@/services/resultsService';
 
-
-// interface DrawResult {
-//   id: string;
-//   gameId: string;
-//   gameName: string;
-//   drawDate: string;
-//   numbers: {
-//     main: number[];
-//     bonus?: number[];
-//   };
-//   jackpot: string;
-// }
 interface SelectedNumbers {
   main: number[];
   bonus: number[];
@@ -56,9 +44,6 @@ const DashboardPage: React.FC = () => {
   const [tickets, setTickets] = useState<LotteryTicket[]>([]);
   const [loading, setLoading] = useState(true);
 
-  
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const loadUserTickets = () => {
     try {
       const savedTickets = localStorage.getItem('lotteryTickets');
@@ -82,22 +67,23 @@ const DashboardPage: React.FC = () => {
     }
 
     loadUserTickets();
-  }, [isAuthenticated, loadUserTickets, navigate]);
+  }, [isAuthenticated, navigate]);
 
+  // Fixed function to check tickets against actual results for demo purposes
   const checkTicketAgainstResults = (ticketId: string) => {
     const ticket = tickets.find(t => t.id === ticketId);
     if (!ticket) return;
 
-    // Get the relevant draw result for this ticket
-    const relevantResult = getRelevantResultForTicket(ticket.gameId, ticket.purchaseDate);
-
-    if (!relevantResult) {
+    // Find the corresponding draw result for this game (demo - use latest result)
+    const gameResult = DRAW_RESULTS.find(result => result.gameId === ticket.gameId);
+    
+    if (!gameResult) {
       toast.info(`No draw results available yet for your ${ticket.gameName} ticket.`);
       return;
     }
 
-    // Use the shared checking logic
-    const checkResult = checkTicketAgainstResult(ticket, relevantResult);
+    // Use the centralized checking logic from resultsService
+    const checkResult = checkTicketAgainstResult(ticket, gameResult);
     
     if (!checkResult) return;
 
@@ -210,7 +196,7 @@ const DashboardPage: React.FC = () => {
         main: [...gameResult.numbers.main], // Copy exact winning numbers
         bonus: [...(gameResult.numbers.bonus || [])]
       },
-      ticketPrice: getTicketPrice(gameId), // You might need this helper
+      ticketPrice: getTicketPrice(gameId),
       purchaseDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Yesterday
       drawDate: gameResult.drawDate,
       status: 'pending'
@@ -239,7 +225,7 @@ const DashboardPage: React.FC = () => {
     return prices[gameId] || 200;
   };  
 
-    // Create a ticket with some matches but not full win (for testing partial wins)
+  // Create a ticket with some matches but not full win (for testing partial wins)
   const createPartialWinTicket = (gameId: string, matchCount: number = 3) => {
     if (!user?.id) return;
     

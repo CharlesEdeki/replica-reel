@@ -32,10 +32,12 @@ interface LotteryTicket {
   userId: string;
   numbers: SelectedNumbers;
   ticketPrice: number;
+  stakeAmount: number; // Added stake amount field
   purchaseDate: string;
   drawDate: string;
   status: 'pending' | 'drawn' | 'won' | 'lost';
   winAmount?: number;
+  stakeMultiplier?: number; // Track the multiplier used
 }
 
 const DashboardPage: React.FC = () => {
@@ -69,12 +71,12 @@ const DashboardPage: React.FC = () => {
     loadUserTickets();
   }, [isAuthenticated, navigate]);
 
-  // Fixed function to check tickets against actual results for demo purposes
+  // Check tickets against actual results with stake multiplier
   const checkTicketAgainstResults = (ticketId: string) => {
     const ticket = tickets.find(t => t.id === ticketId);
     if (!ticket) return;
 
-    // Find the corresponding draw result for this game (demo - use latest result)
+    // Find the corresponding draw result for this game
     const gameResult = DRAW_RESULTS.find(result => result.gameId === ticket.gameId);
     
     if (!gameResult) {
@@ -82,15 +84,19 @@ const DashboardPage: React.FC = () => {
       return;
     }
 
-    // Use the centralized checking logic from resultsService
-    const checkResult = checkTicketAgainstResult(ticket, gameResult);
+    // Calculate stake multiplier (minimum stake is ₦50)
+    const stakeMultiplier = (ticket.stakeAmount || ticket.ticketPrice || 50) / 50;
+
+    // Use the centralized checking logic with stake multiplier
+    const checkResult = checkTicketAgainstResult(ticket, gameResult, stakeMultiplier);
     
     if (!checkResult) return;
 
     const updatedTicket = {
       ...ticket,
       status: checkResult.isWinner ? 'won' as const : 'lost' as const,
-      winAmount: checkResult.winAmount || undefined
+      winAmount: checkResult.winAmount || undefined,
+      stakeMultiplier: stakeMultiplier
     };
 
     // Update in state
@@ -105,7 +111,8 @@ const DashboardPage: React.FC = () => {
       localStorage.setItem('lotteryTickets', JSON.stringify(updatedTickets));
 
       if (checkResult.isWinner) {
-        toast.success(`🎉 Omo! You don win! ${checkResult.tier} - ₦${checkResult.winAmount?.toLocaleString()}! E choke!`);
+        const multiplierText = stakeMultiplier > 1 ? ` (${stakeMultiplier}x your stake!)` : '';
+        toast.success(`🎉 Omo! You don win! ${checkResult.tier} - ₦${checkResult.winAmount?.toLocaleString()}${multiplierText}! E choke!`);
       } else {
         toast.info(`Your ${ticket.gameName} ticket no enter this time. You get ${checkResult.mainMatches} main matches${checkResult.bonusMatches > 0 ? ` and ${checkResult.bonusMatches} bonus matches` : ''}, but e no reach to win. Better luck next time!`);
       }
@@ -114,7 +121,7 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  const getStatusBadge = (status: string, winAmount?: number) => {
+  const getStatusBadge = (status: string, winAmount?: number, stakeMultiplier?: number) => {
     switch (status) {
       case 'pending':
         return (
@@ -124,10 +131,11 @@ const DashboardPage: React.FC = () => {
           </span>
         );
       case 'won':
+        const multiplierBadge = stakeMultiplier && stakeMultiplier > 1 ? ` (${stakeMultiplier}x!)` : '';
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
             <Trophy className="w-3 h-3" />
-            You Win ₦{winAmount?.toLocaleString()}! 🔥
+            You Win ₦{winAmount?.toLocaleString()}{multiplierBadge}! 🔥
           </span>
         );
       case 'lost':
@@ -159,7 +167,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const getTotalSpent = () => {
-    return tickets.reduce((total, ticket) => total + ticket.ticketPrice, 0);
+    return tickets.reduce((total, ticket) => total + (ticket.stakeAmount || ticket.ticketPrice || 50), 0);
   };
 
   const getTotalWinnings = () => {
@@ -181,14 +189,14 @@ const DashboardPage: React.FC = () => {
     );
   }
 
-  const createInstantWinTicket = (gameId: string) => {
+  const createInstantWinTicket = (gameId: string, stakeAmount: number = 100) => {
     if (!user?.id) return;
   
     const gameResult = DRAW_RESULTS.find(r => r.gameId === gameId);
     if (!gameResult) return;
   
     const winningTicket: LotteryTicket = {
-      id: `instant-win-${gameId}-${Date.now()}`,
+      id: `instant-win-${gameId}-${stakeAmount}-${Date.now()}`,
       gameId: gameId,
       gameName: gameResult.gameName,
       userId: user.id,
@@ -196,7 +204,8 @@ const DashboardPage: React.FC = () => {
         main: [...gameResult.numbers.main], // Copy exact winning numbers
         bonus: [...(gameResult.numbers.bonus || [])]
       },
-      ticketPrice: getTicketPrice(gameId),
+      ticketPrice: stakeAmount, // Use the stake amount as ticket price
+      stakeAmount: stakeAmount,
       purchaseDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Yesterday
       drawDate: gameResult.drawDate,
       status: 'pending'
@@ -208,25 +217,15 @@ const DashboardPage: React.FC = () => {
       localStorage.setItem('lotteryTickets', JSON.stringify(updatedTickets));
       
       loadUserTickets();
-      toast.success(`🎯 Created instant win ticket for ${gameResult.gameName}! Now check it to see the win! 🚀`);
+      const multiplier = stakeAmount / 50;
+      toast.success(`🎯 Created ₦${stakeAmount} stake ticket for ${gameResult.gameName}! (${multiplier}x multiplier) Check it now! 🚀`);
     } catch (error) {
       console.error('Error creating instant win ticket:', error);
     }
   };  
 
-  // Helper function for ticket prices
-  const getTicketPrice = (gameId: string): number => {
-    const prices: { [key: string]: number } = {
-      'lotto': 200,
-      'afromillions': 500,
-      'thunderball': 300,
-      'set-for-life': 400
-    };
-    return prices[gameId] || 200;
-  };  
-
   // Create a ticket with some matches but not full win (for testing partial wins)
-  const createPartialWinTicket = (gameId: string, matchCount: number = 3) => {
+  const createPartialWinTicket = (gameId: string, matchCount: number = 3, stakeAmount: number = 200) => {
     if (!user?.id) return;
     
     const gameResult = DRAW_RESULTS.find(r => r.gameId === gameId);
@@ -241,7 +240,7 @@ const DashboardPage: React.FC = () => {
     ];
     
     const partialTicket: LotteryTicket = {
-      id: `partial-win-${gameId}-${matchCount}-${Date.now()}`,
+      id: `partial-win-${gameId}-${matchCount}-${stakeAmount}-${Date.now()}`,
       gameId: gameId,
       gameName: gameResult.gameName,
       userId: user.id,
@@ -249,7 +248,8 @@ const DashboardPage: React.FC = () => {
         main: partialNumbers.slice(0, gameResult.numbers.main.length),
         bonus: matchCount > 4 ? [...(gameResult.numbers.bonus || [])] : [Math.floor(Math.random() * 12) + 1]
       },
-      ticketPrice: getTicketPrice(gameId),
+      ticketPrice: stakeAmount,
+      stakeAmount: stakeAmount,
       purchaseDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       drawDate: gameResult.drawDate,
       status: 'pending'
@@ -261,7 +261,8 @@ const DashboardPage: React.FC = () => {
       localStorage.setItem('lotteryTickets', JSON.stringify(updatedTickets));
       
       loadUserTickets();
-      toast.success(`🎲 Created ${matchCount}-match ticket for ${gameResult.gameName}! Check it to see partial win!`);
+      const multiplier = stakeAmount / 50;
+      toast.success(`🎲 Created ${matchCount}-match ticket with ₦${stakeAmount} stake (${multiplier}x)! Check it to see win!`);
     } catch (error) {
       console.error('Error creating partial win ticket:', error);
     }
@@ -304,55 +305,55 @@ const DashboardPage: React.FC = () => {
           
           <div className="space-y-4">
             <div>
-              <h4 className="font-semibold text-gray-700 mb-2">Create Instant Jackpot Winners:</h4>
-              <div className="flex flex-wrap gap-2">
+              <h4 className="font-semibold text-gray-700 mb-2">Create Instant Jackpot Winners with Different Stakes:</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 <button 
-                  onClick={() => createInstantWinTicket('lotto')} 
-                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                  onClick={() => createInstantWinTicket('lotto', 50)} 
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm font-semibold transition"
                 >
-                  🎰 Lotto Jackpot (₦5.2B)
+                  🎰 Lotto ₦50 (1x)
                 </button>
                 <button 
-                  onClick={() => createInstantWinTicket('afromillions')} 
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                  onClick={() => createInstantWinTicket('lotto', 200)} 
+                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm font-semibold transition"
                 >
-                  🌟 AfroMillions Jackpot (₦157B)
+                  🎰 Lotto ₦200 (4x)
                 </button>
                 <button 
-                  onClick={() => createInstantWinTicket('thunderball')} 
-                  className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                  onClick={() => createInstantWinTicket('afromillions', 100)} 
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded text-sm font-semibold transition"
                 >
-                  ⚡ Thunderball Jackpot (₦500M)
+                  🌟 AfroMill ₦100 (2x)
                 </button>
                 <button 
-                  onClick={() => createInstantWinTicket('set-for-life')} 
-                  className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+                  onClick={() => createInstantWinTicket('afromillions', 500)} 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm font-semibold transition"
                 >
-                  🏆 Set For Life Jackpot
+                  🌟 AfroMill ₦500 (10x)
                 </button>
               </div>
             </div>
 
             <div>
-              <h4 className="font-semibold text-gray-700 mb-2">Create Partial Winners:</h4>
+              <h4 className="font-semibold text-gray-700 mb-2">Create Partial Winners with Stakes:</h4>
               <div className="flex flex-wrap gap-2">
                 <button 
-                  onClick={() => createPartialWinTicket('lotto', 5)} 
+                  onClick={() => createPartialWinTicket('lotto', 5, 100)} 
                   className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm transition"
                 >
-                  5 Match Lotto (₦140K)
+                  5 Match ₦100 (₦280K win)
                 </button>
                 <button 
-                  onClick={() => createPartialWinTicket('lotto', 4)} 
+                  onClick={() => createPartialWinTicket('lotto', 4, 200)} 
                   className="bg-green-400 hover:bg-green-500 text-white px-3 py-2 rounded text-sm transition"
                 >
-                  4 Match Lotto (₦30K)
+                  4 Match ₦200 (₦120K win)
                 </button>
                 <button 
-                  onClick={() => createPartialWinTicket('lotto', 3)} 
+                  onClick={() => createPartialWinTicket('lotto', 3, 500)} 
                   className="bg-green-300 hover:bg-green-400 text-white px-3 py-2 rounded text-sm transition"
                 >
-                  3 Match Lotto (₦3K)
+                  3 Match ₦500 (₦30K win)
                 </button>
               </div>
             </div>
@@ -446,6 +447,7 @@ const DashboardPage: React.FC = () => {
             <div className="space-y-4">
               {tickets.map((ticket) => {
                 const game = getGameById(ticket.gameId);
+                const stakeMultiplier = (ticket.stakeAmount || ticket.ticketPrice || 50) / 50;
                 return (
                   <div key={ticket.id} className="border rounded-lg p-4 hover:shadow-md transition">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -454,22 +456,28 @@ const DashboardPage: React.FC = () => {
                           <h3 className="font-semibold text-lg text-gray-900">
                             {ticket.gameName}
                           </h3>
-                          {getStatusBadge(ticket.status, ticket.winAmount)}
+                          {getStatusBadge(ticket.status, ticket.winAmount, ticket.stakeMultiplier)}
                         </div>
                         
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600 mb-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-sm text-gray-600 mb-3">
                           <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
-                            <span>You Buy: {formatDate(ticket.purchaseDate)}</span>
+                            <span>Bought: {formatDate(ticket.purchaseDate)}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
-                            <span>Draw Date: {formatDate(ticket.drawDate)}</span>
+                            <span>Draw: {formatDate(ticket.drawDate)}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <CreditCard className="w-4 h-4" />
-                            <span>Cost: ₦{ticket.ticketPrice.toLocaleString()}</span>
+                            <span>Stake: ₦{(ticket.stakeAmount || ticket.ticketPrice || 50).toLocaleString()}</span>
                           </div>
+                          {stakeMultiplier > 1 && (
+                            <div className="flex items-center gap-2">
+                              <TrendingUp className="w-4 h-4 text-green-600" />
+                              <span className="text-green-600 font-semibold">{stakeMultiplier}x Multiplier!</span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Numbers Display */}
@@ -541,7 +549,7 @@ const DashboardPage: React.FC = () => {
           >
             <Play className="w-8 h-8 mb-3" />
             <h3 className="text-lg font-semibold mb-2">Play Games</h3>
-            <p className="text-blue-100">Pick your lucky numbers and buy tickets wey go make you rich! 💰</p>
+            <p className="text-blue-100">Pick your lucky numbers and choose your stake to multiply winnings! 💰</p>
           </Link>
 
           <Link
@@ -559,7 +567,7 @@ const DashboardPage: React.FC = () => {
           >
             <Target className="w-8 h-8 mb-3" />
             <h3 className="text-lg font-semibold mb-2">Check Numbers</h3>
-            <p className="text-green-100">See if your numbers don win something sweet! 🎯</p>
+            <p className="text-green-100">See if your numbers don win something sweet! Higher stakes = bigger wins! 🎯</p>
           </Link>
         </div>
       </div>

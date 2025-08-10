@@ -116,12 +116,53 @@ export const getRelevantResultForTicket = (gameId: string, ticketPurchaseDate: s
     .sort((a, b) => new Date(a.drawDate).getTime() - new Date(b.drawDate).getTime())[0]; // Get earliest qualifying draw
 };
 
-// Ticket checking logic - centralized
-export const checkTicketAgainstResult = (ticket: any, result: DrawResult) => {
+
+// Base prize tiers (for minimum stake of ₦50)
+const BASE_PRIZES = {
+  lotto: {
+    6: 5200000000, // Jackpot
+    '5+bonus': 1750000,
+    5: 140000,
+    4: 30000,
+    3: 3000
+  },
+  afromillions: {
+    '5+2': 157000000000, // Jackpot  
+    '5+1': 234567000,
+    5: 13456000,
+    '4+bonus': 500000,
+    4: 150000,
+    '3+bonus': 50000,
+    3: 20000,
+    '2+bonus': 10000
+  },
+  thunderball: {
+    '5+bonus': 500000000, // Jackpot
+    5: 5000000,
+    '4+bonus': 250000,
+    4: 100000,
+    '3+bonus': 20000,
+    3: 10000,
+    'bonus': 3000
+  },
+  'set-for-life': {
+    '5+bonus': 10000000, // Monthly prize
+    5: 10000,
+    '4+bonus': 350000,
+    4: 50000,
+    '3+bonus': 30000,
+    3: 10000,
+    '2+bonus': 5000
+  }
+};
+
+// Ticket checking logic - centralized with stake multiplier
+export const checkTicketAgainstResult = (ticket: any, result: DrawResult, stakeMultiplier: number = 1) => {
   if (ticket.gameId !== result.gameId) return null;
 
   console.log('Checking ticket:', ticket.numbers);
   console.log('Against result:', result.numbers);
+  console.log('Stake multiplier:', stakeMultiplier);
 
   // Check main number matches
   const mainMatches = ticket.numbers.main.filter((num: number) => 
@@ -138,126 +179,154 @@ export const checkTicketAgainstResult = (ticket: any, result: DrawResult) => {
 
   console.log(`Main matches: ${mainMatches}, Bonus matches: ${bonusMatches}`);
 
-  // Determine prize based on matches and game type
-  let winAmount = 0;
+    // Determine prize based on matches and game type
+  let baseWinAmount = 0;
   let tier = "";
   let isWinner = false;
+  let isJackpot = false;
   
   if (result.gameId === 'lotto') {
     if (mainMatches === 6) {
-      winAmount = 5200000000;
+      baseWinAmount = BASE_PRIZES.lotto[6];
       tier = "JACKPOT! You don blow! 🎉💰";
       isWinner = true;
+      isJackpot = true;
     } else if (mainMatches === 5 && bonusMatches >= 1) {
-      winAmount = 1750000;
+      baseWinAmount = BASE_PRIZES.lotto['5+bonus'];
       tier = "Match 5 + Bonus - Big Win!";
       isWinner = true;
     } else if (mainMatches === 5) {
-      winAmount = 140000;
+      baseWinAmount = BASE_PRIZES.lotto[5];
       tier = "Match 5 - Sweet Win!";
       isWinner = true;
     } else if (mainMatches === 4) {
-      winAmount = 30000;
+      baseWinAmount = BASE_PRIZES.lotto[4];
       tier = "Match 4 - Small Chop!";
       isWinner = true;
     } else if (mainMatches === 3) {
-      winAmount = 3000;
+      baseWinAmount = BASE_PRIZES.lotto[3];
       tier = "Match 3 - Something small!";
       isWinner = true;
     }
   } else if (result.gameId === 'afromillions') {
     if (mainMatches === 5 && bonusMatches === 2) {
-      winAmount = 157000000000;
+      baseWinAmount = BASE_PRIZES.afromillions['5+2'];
       tier = "JACKPOT! Na your time o! 🔥💰";
       isWinner = true;
+      isJackpot = true;
     } else if (mainMatches === 5 && bonusMatches === 1) {
-      winAmount = 234567000;
+      baseWinAmount = BASE_PRIZES.afromillions['5+1'];
       tier = "Match 5 + 1 Star - Big Gbege!";
       isWinner = true;
     } else if (mainMatches === 5) {
-      winAmount = 13456000;
+      baseWinAmount = BASE_PRIZES.afromillions[5];
       tier = "Match 5 - Sweet Money!";
       isWinner = true;
     } else if (mainMatches === 4 && bonusMatches >= 1) {
-      winAmount = 500000;
+      baseWinAmount = BASE_PRIZES.afromillions['4+bonus'];
       tier = "Match 4 + Star";
       isWinner = true;
     } else if (mainMatches === 4) {
-      winAmount = 150000;
+      baseWinAmount = BASE_PRIZES.afromillions[4];
       tier = "Match 4";
       isWinner = true;
     } else if (mainMatches === 3 && bonusMatches >= 1) {
-      winAmount = 50000;
+      baseWinAmount = BASE_PRIZES.afromillions['3+bonus'];
       tier = "Match 3 + Star";
       isWinner = true;
     } else if (mainMatches === 3) {
-      winAmount = 20000;
+      baseWinAmount = BASE_PRIZES.afromillions[3];
       tier = "Match 3";
       isWinner = true;
     } else if (mainMatches === 2 && bonusMatches >= 1) {
-      winAmount = 10000;
+      baseWinAmount = BASE_PRIZES.afromillions['2+bonus'];
       tier = "Match 2 + Star";
+      isWinner = true;
+    }
+
+  } else if (result.gameId === 'set-for-life') {
+    if (mainMatches === 5 && bonusMatches >= 1) {
+      baseWinAmount = BASE_PRIZES['set-for-life']['5+bonus'];
+      tier = "JACKPOT! Set for life o! 🏆💰";
+      isWinner = true;
+      isJackpot = true;
+    } else if (mainMatches === 5) {
+      baseWinAmount = BASE_PRIZES['set-for-life'][5];
+      tier = "Match 5 - Monthly Pay!";
+      isWinner = true;
+    } else if (mainMatches === 4 && bonusMatches >= 1) {
+      baseWinAmount = BASE_PRIZES['set-for-life']['4+bonus'];
+      tier = "Match 4 + Life Ball";
+      isWinner = true;
+    } else if (mainMatches === 4) {
+      baseWinAmount = BASE_PRIZES['set-for-life'][4];
+      tier = "Match 4";
+      isWinner = true;
+    } else if (mainMatches === 3 && bonusMatches >= 1) {
+      baseWinAmount = BASE_PRIZES['set-for-life']['3+bonus'];
+      tier = "Match 3 + Life Ball";
+      isWinner = true;
+    } else if (mainMatches === 3) {
+      baseWinAmount = BASE_PRIZES['set-for-life'][3];
+      tier = "Match 3";
+      isWinner = true;
+    } else if (mainMatches === 2 && bonusMatches >= 1) {
+      baseWinAmount = BASE_PRIZES['set-for-life']['2+bonus'];
+      tier = "Match 2 + Life Ball";
       isWinner = true;
     }
   } else if (result.gameId === 'thunderball') {
     if (mainMatches === 5 && bonusMatches >= 1) {
-      winAmount = 500000000;
+      baseWinAmount = BASE_PRIZES.thunderball['5+bonus'];
       tier = "JACKPOT! Thunder don strike! ⚡💰";
       isWinner = true;
+      isJackpot = true;
     } else if (mainMatches === 5) {
-      winAmount = 5000000;
+      baseWinAmount = BASE_PRIZES.thunderball[5];
       tier = "Match 5 - Big Win!";
       isWinner = true;
     } else if (mainMatches === 4 && bonusMatches >= 1) {
-      winAmount = 250000;
+      baseWinAmount = BASE_PRIZES.thunderball['4+bonus'];
       tier = "Match 4 + Thunderball";
       isWinner = true;
     } else if (mainMatches === 4) {
-      winAmount = 100000;
+      baseWinAmount = BASE_PRIZES.thunderball[4];
       tier = "Match 4";
       isWinner = true;
     } else if (mainMatches === 3 && bonusMatches >= 1) {
-      winAmount = 20000;
+      baseWinAmount = BASE_PRIZES.thunderball['3+bonus'];
       tier = "Match 3 + Thunderball";
       isWinner = true;
     } else if (mainMatches === 3) {
-      winAmount = 10000;
+      baseWinAmount = BASE_PRIZES.thunderball[3];
       tier = "Match 3";
       isWinner = true;
     } else if (bonusMatches >= 1) {
-      winAmount = 3000;
+      baseWinAmount = BASE_PRIZES.thunderball['bonus'];
       tier = "Thunderball Match";
       isWinner = true;
     }
-  } else if (result.gameId === 'set-for-life') {
-    if (mainMatches === 5 && bonusMatches >= 1) {
-      winAmount = 10000000;
-      tier = "JACKPOT! Set for life o! 🏆💰";
-      isWinner = true;
-    } else if (mainMatches === 5) {
-      winAmount = 10000;
-      tier = "Match 5 - Monthly Pay!";
-      isWinner = true;
-    } else if (mainMatches === 4 && bonusMatches >= 1) {
-      winAmount = 350000;
-      tier = "Match 4 + Life Ball";
-      isWinner = true;
-    } else if (mainMatches === 4) {
-      winAmount = 50000;
-      tier = "Match 4";
-      isWinner = true;
-    } else if (mainMatches === 3 && bonusMatches >= 1) {
-      winAmount = 30000;
-      tier = "Match 3 + Life Ball";
-      isWinner = true;
-    } else if (mainMatches === 3) {
-      winAmount = 10000;
-      tier = "Match 3";
-      isWinner = true;
-    } else if (mainMatches === 2 && bonusMatches >= 1) {
-      winAmount = 5000;
-      tier = "Match 2 + Life Ball";
-      isWinner = true;
+  }
+
+  // Calculate final win amount with stake multiplier
+  // For jackpots, we typically don't multiply by stake (fixed jackpot)
+  // For other prizes, multiply by stake multiplier
+  let finalWinAmount = 0;
+  if (isWinner) {
+    if (isJackpot) {
+      // Jackpots are typically fixed amounts regardless of stake
+      finalWinAmount = baseWinAmount;
+      // But for demo purposes, let's give a bonus for higher stakes on jackpots
+      if (stakeMultiplier > 1) {
+        tier += ` (+ ₦${Math.floor(baseWinAmount * 0.1 * (stakeMultiplier - 1)).toLocaleString()} stake bonus!)`;
+        finalWinAmount += Math.floor(baseWinAmount * 0.1 * (stakeMultiplier - 1));
+      }
+    } else {
+      // Regular prizes get multiplied by stake
+      finalWinAmount = Math.floor(baseWinAmount * stakeMultiplier);
+      if (stakeMultiplier > 1) {
+        tier += ` (${stakeMultiplier}x stake bonus!)`;
+      }
     }
   }
 
@@ -265,9 +334,12 @@ export const checkTicketAgainstResult = (ticket: any, result: DrawResult) => {
     mainMatches,
     bonusMatches,
     totalMatches: mainMatches + bonusMatches,
-    prize: winAmount > 0 ? `₦${winAmount.toLocaleString()}` : "No Prize",
+    prize: finalWinAmount > 0 ? `₦${finalWinAmount.toLocaleString()}` : "No Prize",
     tier,
     isWinner,
-    winAmount
+    winAmount: finalWinAmount,
+    baseWinAmount,
+    stakeMultiplier,
+    isJackpot
   };
 };
